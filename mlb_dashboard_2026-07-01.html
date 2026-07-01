@@ -1,4 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MLB Model -- 2026-07-01</title><style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MLB Model -- 2026-07-01</title>
+<style>
 :root{--bg:#0a0e1a;--sur:#111827;--sur2:#1a2235;--bdr:#1e2d45;--txt:#e2e8f0;--mut:#64748b;
 --grn:#00e676;--yel:#ffca28;--red:#ef5350;--blu:#42a5f5;--orn:#ffa726;--pur:#ce93d8;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -220,29 +226,67 @@ tr:hover td{background:var(--sur2);}
 /* ── Umpire scorecard tab ── */
 .ump-table-wrap{overflow-x:auto;}
 .ump-grade-cell{font-weight:800;font-size:14px;}
-</style></head><body><div class="hdr">  <div>    <div class="hdr-title">MLB Betting Model <span>v3</span></div>    <div class="hdr-date">Generated July 1, 2026  1:12 PM</div>  </div>  <div style="text-align:right">    <div style="font-size:13px;color:#94a3b8">7 plays &nbsp;|&nbsp; 3.50u in action</div>    <div style="font-size:12px;color:var(--mut);margin-top:2px">XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26: 1170-808 (59.2% win rate)</div>  </div></div><div class="stats-bar">  <div class="sc"><span class="sl">Backtest W-L</span><span class="sv">1170-808</span></div>  <div class="sdiv"></div>  <div class="sc"><span class="sl">Win Rate</span><span class="sv pos">59.2%</span></div>  <div class="sdiv"></div>  <div class="sc"><span class="sl">ROI</span><span class="sv pos">+13.2%</span></div>  <div class="sdiv"></div>  <div class="sc"><span class="sl">Profit</span><span class="sv pos">+260u</span></div>  <div class="sdiv"></div>  <div class="sc"><span class="sl">Games Analyzed</span><span class="sv">1,978</span></div>  <div class="sdiv"></div>  <div class="sc"><span class="sl">Today Plays</span><span class="sv" style="color:var(--blu)">7</span></div>  <div class="sdiv"></div>  <div class="sc"><span class="sl">Units Today</span><span class="sv" style="color:var(--blu)">3.50u</span></div></div><div class="tab-nav">  <button class="tab-btn active" onclick="switchTab('picks',this)">Today's Picks</button>  <button class="tab-btn" onclick="switchTab('rundown',this)">Today's Rundown</button>  <button class="tab-btn" onclick="switchTab('parlays',this)">Parlays</button>  <button class="tab-btn" onclick="switchTab('news',this)">Bettor News</button>  <button class="tab-btn" onclick="switchTab('trends',this)">Social Trends</button>  <button class="tab-btn" onclick="switchTab('umps',this)">Umpires</button></div><div id="tab-picks" class="tab-panel active">
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div>
+    <div class="hdr-title">MLB Betting Model <span>v3</span></div>
+    <div class="hdr-date">Generated July 1, 2026  5:44 PM</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:13px;color:#94a3b8">4 plays &nbsp;|&nbsp; 3.25u in action</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:2px">XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26: 1170-808 (59.2% win rate)</div>
+  </div>
+</div>
+<div class="stats-bar">
+  <div class="sc"><span class="sl">Backtest W-L</span><span class="sv">1170-808</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Win Rate</span><span class="sv pos">59.2%</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">ROI</span><span class="sv pos">+13.2%</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Profit</span><span class="sv pos">+260u</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Games Analyzed</span><span class="sv">1,978</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Today Plays</span><span class="sv" style="color:var(--blu)">4</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Units Today</span><span class="sv" style="color:var(--blu)">3.25u</span></div>
+</div>
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('picks',this)">Today's Picks</button>
+  <button class="tab-btn" onclick="switchTab('rundown',this)">Today's Rundown</button>
+  <button class="tab-btn" onclick="switchTab('results',this)">Results</button>
+  <button class="tab-btn" onclick="switchTab('weekly',this)">Weekly</button>
+  <button class="tab-btn" onclick="switchTab('parlays',this)">Parlays</button>
+  <button class="tab-btn" onclick="switchTab('news',this)">Bettor News</button>
+  <button class="tab-btn" onclick="switchTab('trends',this)">Social Trends</button>
+  <button class="tab-btn" onclick="switchTab('umps',this)">Umpires</button>
+</div>
+<div id="tab-picks" class="tab-panel active">
 <div class="main">
   <div class="sec-title">Today's Picks — 2026-07-01</div>
   <div class="grid">
-<div class="card" style="--cc:#00e676" onclick="openModal('Giants_Diamondbacks_home')" data-id="Giants_Diamondbacks_home">
+<div class="card" style="--cc:#00e676" onclick="openModal('Colorado_Rockies_Miami_Marlins_home')" data-id="Colorado_Rockies_Miami_Marlins_home">
   <div class="chdr">
     <div class="mu">
-      <span class="pt">Giants</span>
+      <span class="pt">Colorado Rockies</span>
       <span class="vs">vs</span>
-      <span class="ot">Diamondbacks</span>
-      <span class="oub">O/U 7.5</span>
+      <span class="ot">Miami Marlins</span>
+      <span class="oub">O/U 11.0</span>
     </div>
     <div class="cmeta">
-      <span class="sp">T. McDonald vs Z. Gallen</span>
-      <span class="sp">Oracle Park (PF:0.93)</span>
+      <span class="sp">Kyle Freeland vs Max Meyer</span>
+      <span class="sp">Coors Field (PF:1.38)</span>
       
     </div>
   </div>
   <div class="pline">
     <div class="pbadge" style="background:#00e67620;border:1px solid #00e676">
       <span class="plbl">PICK</span>
-      <span class="ptn">Giants</span>
-      <span class="pml">+100</span>
+      <span class="ptn">Colorado Rockies</span>
+      <span class="pml">+125</span>
     </div>
     <span class="cbadge" style="color:#00e676">HIGH</span>
     <span class="ubadge">1.0u</span>
@@ -255,8 +299,8 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
         </span>
       </span>
-      <div class="pbwrap"><div class="pb m" style="width:58.4%"></div></div>
-      <span class="pval">58.4%</span>
+      <div class="pbwrap"><div class="pb m" style="width:62.7%"></div></div>
+      <span class="pval">62.7%</span>
     </div>
     <div class="prow">
       <span class="plabel">
@@ -265,8 +309,8 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
         </span>
       </span>
-      <div class="pbwrap"><div class="pb k" style="width:50.0%"></div></div>
-      <span class="pval">50.0%</span>
+      <div class="pbwrap"><div class="pb k" style="width:44.4%"></div></div>
+      <span class="pval">44.4%</span>
     </div>
     <div class="erow">
       <span class="elbl">
@@ -275,44 +319,44 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
         </span>
       </span>
-      <span class="eval" style="color:#00e676">+8.4%</span>
+      <span class="eval" style="color:#00e676">+18.3%</span>
     </div>
   </div>
   <div class="reasons">
     <div class="rcol">
       <div class="rtitle pro">3 Reasons to Bet</div>
-      <ul class="rlist"><li><span class="bul p">+</span>Model edge +8.4%: market prices Giants at 50.0%, model says 58.4%</li><li><span class="bul p">+</span>T. McDonald FIP 4.60 vs opp FIP 6.30 — 1.70 FIP edge (defense-independent)</li><li><span class="bul p">+</span>Giants win% 50.0% vs Diamondbacks 44.0% — 6pt stronger record this season</li></ul>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +18.3%: market prices Colorado Rockies at 44.4%, model says 62.7%</li><li><span class="bul p">+</span>Underdog value at +125 — only needs 44% win rate to be +EV long-term</li><li><span class="bul p">+</span>Kyle Freeland recent form strong — last 5 starts ERA 6.95 better than season avg 7.50</li></ul>
     </div>
     <div class="rcol">
       <div class="rtitle con">3 Reasons Against</div>
-      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Diamondbacks road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Miami Marlins road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
     </div>
   </div>
   <div class="click-hint">click for full analysis</div>
 </div>
 
-<div class="card" style="--cc:#ffca28" onclick="openModal('Athletics_Dodgers_home')" data-id="Athletics_Dodgers_home">
+<div class="card" style="--cc:#00e676" onclick="openModal('Athletics_Los_Angeles_Dodgers_home')" data-id="Athletics_Los_Angeles_Dodgers_home">
   <div class="chdr">
     <div class="mu">
       <span class="pt">Athletics</span>
       <span class="vs">vs</span>
-      <span class="ot">Dodgers</span>
-      <span class="oub">O/U 9.5</span>
+      <span class="ot">Los Angeles Dodgers</span>
+      <span class="oub">O/U 11.0</span>
     </div>
     <div class="cmeta">
-      <span class="sp">J.T. Ginn vs G. Detmers</span>
+      <span class="sp">J.T. Ginn vs TBD</span>
       <span class="sp">Sutter Health Park (PF:0.95)</span>
       
     </div>
   </div>
   <div class="pline">
-    <div class="pbadge" style="background:#ffca2820;border:1px solid #ffca28">
+    <div class="pbadge" style="background:#00e67620;border:1px solid #00e676">
       <span class="plbl">PICK</span>
       <span class="ptn">Athletics</span>
-      <span class="pml">+138</span>
+      <span class="pml">+141</span>
     </div>
-    <span class="cbadge" style="color:#ffca28">MEDIUM</span>
-    <span class="ubadge">0.5u</span>
+    <span class="cbadge" style="color:#00e676">HIGH</span>
+    <span class="ubadge">1.0u</span>
   </div>
   <div class="probs">
     <div class="prow">
@@ -322,220 +366,19 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
         </span>
       </span>
-      <div class="pbwrap"><div class="pb m" style="width:48.0%"></div></div>
-      <span class="pval">48.0%</span>
-    </div>
-    <div class="prow">
-      <span class="plabel">
-        <span class="tip-wrap">Market Impl
-          <span class="tip-icon">?</span>
-          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
-        </span>
-      </span>
-      <div class="pbwrap"><div class="pb k" style="width:42.0%"></div></div>
-      <span class="pval">42.0%</span>
-    </div>
-    <div class="erow">
-      <span class="elbl">
-        <span class="tip-wrap">Edge
-          <span class="tip-icon">?</span>
-          <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
-        </span>
-      </span>
-      <span class="eval" style="color:#ffca28">+6.0%</span>
-    </div>
-  </div>
-  <div class="reasons">
-    <div class="rcol">
-      <div class="rtitle pro">3 Reasons to Bet</div>
-      <ul class="rlist"><li><span class="bul p">+</span>Model edge +6.0%: market prices Athletics at 42.0%, model says 48.0%</li><li><span class="bul p">+</span>Underdog value at +138 — only needs 42% win rate to be +EV long-term</li><li><span class="bul p">+</span>Athletics well-rested (5d off) — fresh bullpen arms available today</li></ul>
-    </div>
-    <div class="rcol">
-      <div class="rtitle con">3 Reasons Against</div>
-      <ul class="rlist"><li><span class="bul c">-</span>Opposing FIP 3.60 better than J.T. Ginn's FIP 4.10 — defense-independent edge favors Dodgers</li><li><span class="bul c">-</span>Dodgers road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
-    </div>
-  </div>
-  <div class="click-hint">click for full analysis</div>
-</div>
-
-<div class="card" style="--cc:#ffca28" onclick="openModal('Nationals_Red_Sox_away')" data-id="Nationals_Red_Sox_away">
-  <div class="chdr">
-    <div class="mu">
-      <span class="pt">Nationals</span>
-      <span class="vs">vs</span>
-      <span class="ot">Red Sox</span>
-      <span class="oub">O/U 9.5</span>
-    </div>
-    <div class="cmeta">
-      <span class="sp">M. Gore vs B. Bello</span>
-      <span class="sp">Fenway Park (PF:1.09)</span>
-      
-    </div>
-  </div>
-  <div class="pline">
-    <div class="pbadge" style="background:#ffca2820;border:1px solid #ffca28">
-      <span class="plbl">PICK</span>
-      <span class="ptn">Nationals</span>
-      <span class="pml">+160</span>
-    </div>
-    <span class="cbadge" style="color:#ffca28">MEDIUM</span>
-    <span class="ubadge">0.5u</span>
-  </div>
-  <div class="probs">
-    <div class="prow">
-      <span class="plabel">
-        <span class="tip-wrap">Model
-          <span class="tip-icon">?</span>
-          <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
-        </span>
-      </span>
-      <div class="pbwrap"><div class="pb m" style="width:44.2%"></div></div>
-      <span class="pval">44.2%</span>
-    </div>
-    <div class="prow">
-      <span class="plabel">
-        <span class="tip-wrap">Market Impl
-          <span class="tip-icon">?</span>
-          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
-        </span>
-      </span>
-      <div class="pbwrap"><div class="pb k" style="width:38.5%"></div></div>
-      <span class="pval">38.5%</span>
-    </div>
-    <div class="erow">
-      <span class="elbl">
-        <span class="tip-wrap">Edge
-          <span class="tip-icon">?</span>
-          <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
-        </span>
-      </span>
-      <span class="eval" style="color:#ffca28">+5.7%</span>
-    </div>
-  </div>
-  <div class="reasons">
-    <div class="rcol">
-      <div class="rtitle pro">3 Reasons to Bet</div>
-      <ul class="rlist"><li><span class="bul p">+</span>Model edge +5.7%: market prices Nationals at 38.5%, model says 44.2%</li><li><span class="bul p">+</span>M. Gore K/9 9.5 — elite strikeout rate, hard to score against</li><li><span class="bul p">+</span>Nationals well-rested (5d off) — fresh bullpen arms available today</li></ul>
-    </div>
-    <div class="rcol">
-      <div class="rtitle con">3 Reasons Against</div>
-      <ul class="rlist"><li><span class="bul c">-</span>Opposing FIP 3.90 better than M. Gore's FIP 4.20 — defense-independent edge favors Red Sox</li><li><span class="bul c">-</span>Red Sox home field advantage — road teams win ~47% of MLB games historically</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
-    </div>
-  </div>
-  <div class="click-hint">click for full analysis</div>
-</div>
-
-<div class="card" style="--cc:#ffca28" onclick="openModal('Tigers_Yankees_away')" data-id="Tigers_Yankees_away">
-  <div class="chdr">
-    <div class="mu">
-      <span class="pt">Tigers</span>
-      <span class="vs">vs</span>
-      <span class="ot">Yankees</span>
-      <span class="oub">O/U 9.5</span>
-    </div>
-    <div class="cmeta">
-      <span class="sp">T. Melton vs W. Warren</span>
-      <span class="sp">Yankee Stadium (PF:1.03)</span>
-      
-    </div>
-  </div>
-  <div class="pline">
-    <div class="pbadge" style="background:#ffca2820;border:1px solid #ffca28">
-      <span class="plbl">PICK</span>
-      <span class="ptn">Tigers</span>
-      <span class="pml">+120</span>
-    </div>
-    <span class="cbadge" style="color:#ffca28">MEDIUM</span>
-    <span class="ubadge">0.5u</span>
-  </div>
-  <div class="probs">
-    <div class="prow">
-      <span class="plabel">
-        <span class="tip-wrap">Model
-          <span class="tip-icon">?</span>
-          <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
-        </span>
-      </span>
-      <div class="pbwrap"><div class="pb m" style="width:51.1%"></div></div>
-      <span class="pval">51.1%</span>
-    </div>
-    <div class="prow">
-      <span class="plabel">
-        <span class="tip-wrap">Market Impl
-          <span class="tip-icon">?</span>
-          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
-        </span>
-      </span>
-      <div class="pbwrap"><div class="pb k" style="width:45.5%"></div></div>
-      <span class="pval">45.5%</span>
-    </div>
-    <div class="erow">
-      <span class="elbl">
-        <span class="tip-wrap">Edge
-          <span class="tip-icon">?</span>
-          <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
-        </span>
-      </span>
-      <span class="eval" style="color:#ffca28">+5.7%</span>
-    </div>
-  </div>
-  <div class="reasons">
-    <div class="rcol">
-      <div class="rtitle pro">3 Reasons to Bet</div>
-      <ul class="rlist"><li><span class="bul p">+</span>Model edge +5.7%: market prices Tigers at 45.5%, model says 51.1%</li><li><span class="bul p">+</span>T. Melton FIP 2.60 vs opp FIP 3.90 — 1.30 FIP edge (defense-independent)</li><li><span class="bul p">+</span>Tigers well-rested (5d off) — fresh bullpen arms available today</li></ul>
-    </div>
-    <div class="rcol">
-      <div class="rtitle con">3 Reasons Against</div>
-      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Yankees home field advantage — road teams win ~47% of MLB games historically</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
-    </div>
-  </div>
-  <div class="click-hint">click for full analysis</div>
-</div>
-
-<div class="card" style="--cc:#ffca28" onclick="openModal('Phillies_Pirates_home')" data-id="Phillies_Pirates_home">
-  <div class="chdr">
-    <div class="mu">
-      <span class="pt">Phillies</span>
-      <span class="vs">vs</span>
-      <span class="ot">Pirates</span>
-      <span class="oub">O/U 8.5</span>
-    </div>
-    <div class="cmeta">
-      <span class="sp">Z. Wheeler vs L. Gibson</span>
-      <span class="sp">Citizens Bank Park (PF:1.03)</span>
-      
-    </div>
-  </div>
-  <div class="pline">
-    <div class="pbadge" style="background:#ffca2820;border:1px solid #ffca28">
-      <span class="plbl">PICK</span>
-      <span class="ptn">Phillies</span>
-      <span class="pml">-136</span>
-    </div>
-    <span class="cbadge" style="color:#ffca28">MEDIUM</span>
-    <span class="ubadge">0.5u</span>
-  </div>
-  <div class="probs">
-    <div class="prow">
-      <span class="plabel">
-        <span class="tip-wrap">Model
-          <span class="tip-icon">?</span>
-          <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
-        </span>
-      </span>
-      <div class="pbwrap"><div class="pb m" style="width:63.0%"></div></div>
-      <span class="pval">63.0%</span>
-    </div>
-    <div class="prow">
-      <span class="plabel">
-        <span class="tip-wrap">Market Impl
-          <span class="tip-icon">?</span>
-          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
-        </span>
-      </span>
-      <div class="pbwrap"><div class="pb k" style="width:57.6%"></div></div>
+      <div class="pbwrap"><div class="pb m" style="width:57.6%"></div></div>
       <span class="pval">57.6%</span>
     </div>
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Market Impl
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb k" style="width:41.5%"></div></div>
+      <span class="pval">41.5%</span>
+    </div>
     <div class="erow">
       <span class="elbl">
         <span class="tip-wrap">Edge
@@ -543,44 +386,44 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
         </span>
       </span>
-      <span class="eval" style="color:#ffca28">+5.4%</span>
+      <span class="eval" style="color:#00e676">+16.1%</span>
     </div>
   </div>
   <div class="reasons">
     <div class="rcol">
       <div class="rtitle pro">3 Reasons to Bet</div>
-      <ul class="rlist"><li><span class="bul p">+</span>Model edge +5.4%: market prices Phillies at 57.6%, model says 63.0%</li><li><span class="bul p">+</span>Z. Wheeler FIP 1.90 vs opp FIP 4.80 — 2.90 FIP edge (defense-independent)</li><li><span class="bul p">+</span>Phillies win% 58.0% vs Pirates 43.0% — 15pt stronger record this season</li></ul>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +16.1%: market prices Athletics at 41.5%, model says 57.6%</li><li><span class="bul p">+</span>J.T. Ginn ERA 3.15 vs opp 4.50 — 1.35 ERA advantage in 15 GS</li><li><span class="bul p">+</span>J.T. Ginn trending UP — last-5-start ERA 3.82 vs season 3.15; improving form</li></ul>
     </div>
     <div class="rcol">
       <div class="rtitle con">3 Reasons Against</div>
-      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Pirates road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Los Angeles Dodgers road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
     </div>
   </div>
   <div class="click-hint">click for full analysis</div>
 </div>
 
-<div class="card" style="--cc:#ffa726" onclick="openModal('Royals_Rays_home')" data-id="Royals_Rays_home">
+<div class="card" style="--cc:#00e676" onclick="openModal('Kansas_City_Royals_Tampa_Bay_Rays_home')" data-id="Kansas_City_Royals_Tampa_Bay_Rays_home">
   <div class="chdr">
     <div class="mu">
-      <span class="pt">Royals</span>
+      <span class="pt">Kansas City Royals</span>
       <span class="vs">vs</span>
-      <span class="ot">Rays</span>
+      <span class="ot">Tampa Bay Rays</span>
       <span class="oub">O/U 10.5</span>
     </div>
     <div class="cmeta">
-      <span class="sp">M. Wacha vs Z. Eflin</span>
+      <span class="sp">Seth Lugo vs Shane McClanahan</span>
       <span class="sp">Kauffman Stadium (PF:0.98)</span>
       
     </div>
   </div>
   <div class="pline">
-    <div class="pbadge" style="background:#ffa72620;border:1px solid #ffa726">
+    <div class="pbadge" style="background:#00e67620;border:1px solid #00e676">
       <span class="plbl">PICK</span>
-      <span class="ptn">Royals</span>
-      <span class="pml">+116</span>
+      <span class="ptn">Kansas City Royals</span>
+      <span class="pml">+125</span>
     </div>
-    <span class="cbadge" style="color:#ffa726">LEAN</span>
-    <span class="ubadge">0.25u</span>
+    <span class="cbadge" style="color:#00e676">HIGH</span>
+    <span class="ubadge">1.0u</span>
   </div>
   <div class="probs">
     <div class="prow">
@@ -590,8 +433,8 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
         </span>
       </span>
-      <div class="pbwrap"><div class="pb m" style="width:49.3%"></div></div>
-      <span class="pval">49.3%</span>
+      <div class="pbwrap"><div class="pb m" style="width:59.4%"></div></div>
+      <span class="pval">59.4%</span>
     </div>
     <div class="prow">
       <span class="plabel">
@@ -600,8 +443,8 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
         </span>
       </span>
-      <div class="pbwrap"><div class="pb k" style="width:46.3%"></div></div>
-      <span class="pval">46.3%</span>
+      <div class="pbwrap"><div class="pb k" style="width:44.4%"></div></div>
+      <span class="pval">44.4%</span>
     </div>
     <div class="erow">
       <span class="elbl">
@@ -610,41 +453,41 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
         </span>
       </span>
-      <span class="eval" style="color:#ffa726">+3.0%</span>
+      <span class="eval" style="color:#00e676">+15.0%</span>
     </div>
   </div>
   <div class="reasons">
     <div class="rcol">
       <div class="rtitle pro">3 Reasons to Bet</div>
-      <ul class="rlist"><li><span class="bul p">+</span>Model edge +3.0%: market prices Royals at 46.3%, model says 49.3%</li><li><span class="bul p">+</span>Underdog value at +116 — only needs 46% win rate to be +EV long-term</li><li><span class="bul p">+</span>Royals well-rested (5d off) — fresh bullpen arms available today</li></ul>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +15.0%: market prices Kansas City Royals at 44.4%, model says 59.4%</li><li><span class="bul p">+</span>Underdog value at +125 — only needs 44% win rate to be +EV long-term</li><li><span class="bul p">+</span>Kansas City Royals well-rested (5d off) — fresh bullpen arms available today</li></ul>
     </div>
     <div class="rcol">
       <div class="rtitle con">3 Reasons Against</div>
-      <ul class="rlist"><li><span class="bul c">-</span>Opposing FIP 3.65 better than M. Wacha's FIP 4.50 — defense-independent edge favors Rays</li><li><span class="bul c">-</span>Rays road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+      <ul class="rlist"><li><span class="bul c">-</span>Seth Lugo trending DOWN — last-5 ERA 5.38 worse than season avg 4.18; recent form a concern</li><li><span class="bul c">-</span>Tampa Bay Rays road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
     </div>
   </div>
   <div class="click-hint">click for full analysis</div>
 </div>
 
-<div class="card" style="--cc:#ffa726" onclick="openModal('Guardians_Rangers_home')" data-id="Guardians_Rangers_home">
+<div class="card" style="--cc:#ffa726" onclick="openModal('Arizona_Diamondbacks_San_Francisco_Giants_home')" data-id="Arizona_Diamondbacks_San_Francisco_Giants_home">
   <div class="chdr">
     <div class="mu">
-      <span class="pt">Guardians</span>
+      <span class="pt">Arizona Diamondbacks</span>
       <span class="vs">vs</span>
-      <span class="ot">Rangers</span>
-      <span class="oub">O/U 8.5</span>
+      <span class="ot">San Francisco Giants</span>
+      <span class="oub">O/U 9.5</span>
     </div>
     <div class="cmeta">
-      <span class="sp">J. Cantillo vs P. Tolle</span>
-      <span class="sp">Progressive Field (PF:0.96)</span>
+      <span class="sp">Zac Gallen vs Trevor McDonald</span>
+      <span class="sp">Chase Field (PF:1.02)</span>
       
     </div>
   </div>
   <div class="pline">
     <div class="pbadge" style="background:#ffa72620;border:1px solid #ffa726">
       <span class="plbl">PICK</span>
-      <span class="ptn">Guardians</span>
-      <span class="pml">-112</span>
+      <span class="ptn">Arizona Diamondbacks</span>
+      <span class="pml">-131</span>
     </div>
     <span class="cbadge" style="color:#ffa726">LEAN</span>
     <span class="ubadge">0.25u</span>
@@ -657,8 +500,8 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
         </span>
       </span>
-      <div class="pbwrap"><div class="pb m" style="width:55.5%"></div></div>
-      <span class="pval">55.5%</span>
+      <div class="pbwrap"><div class="pb m" style="width:60.0%"></div></div>
+      <span class="pval">60.0%</span>
     </div>
     <div class="prow">
       <span class="plabel">
@@ -667,8 +510,8 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
         </span>
       </span>
-      <div class="pbwrap"><div class="pb k" style="width:52.8%"></div></div>
-      <span class="pval">52.8%</span>
+      <div class="pbwrap"><div class="pb k" style="width:56.7%"></div></div>
+      <span class="pval">56.7%</span>
     </div>
     <div class="erow">
       <span class="elbl">
@@ -677,17 +520,17 @@ tr:hover td{background:var(--sur2);}
           <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
         </span>
       </span>
-      <span class="eval" style="color:#ffa726">+2.6%</span>
+      <span class="eval" style="color:#ffa726">+3.3%</span>
     </div>
   </div>
   <div class="reasons">
     <div class="rcol">
       <div class="rtitle pro">3 Reasons to Bet</div>
-      <ul class="rlist"><li><span class="bul p">+</span>Model edge +2.6%: market prices Guardians at 52.8%, model says 55.5%</li><li><span class="bul p">+</span>J. Cantillo FIP 3.87 vs opp FIP 4.70 — 0.83 FIP edge (defense-independent)</li><li><span class="bul p">+</span>Guardians well-rested (5d off) — fresh bullpen arms available today</li></ul>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +3.3%: market prices Arizona Diamondbacks at 56.7%, model says 60.0%</li><li><span class="bul p">+</span>Favorite at -131 with positive model edge — market underpricing Arizona Diamondbacks</li><li><span class="bul p">+</span>Arizona Diamondbacks win% 50.6% vs San Francisco Giants 41.2% — 9pt stronger record this season</li></ul>
     </div>
     <div class="rcol">
       <div class="rtitle con">3 Reasons Against</div>
-      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Rangers road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+      <ul class="rlist"><li><span class="bul c">-</span>Zac Gallen trending DOWN — last-5 ERA 8.56 worse than season avg 6.15; recent form a concern</li><li><span class="bul c">-</span>San Francisco Giants road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
     </div>
   </div>
   <div class="click-hint">click for full analysis</div>
@@ -697,8 +540,275 @@ tr:hover td{background:var(--sur2);}
     <table>
       <thead><tr><th>Away</th><th>ML</th><th>Away Pick</th>
         <th>Home</th><th>ML</th><th>Home Pick</th><th>O/U</th></tr></thead>
-      <tbody><tr><td>Diamondbacks</td><td>-116</td><td><span style="color:#546e7a">—</span></td><td>Giants</td><td>+100</td><td><span style="color:#00e676">HIGH 1.0u (+8.4%)</span></td><td>7.5</td></tr><tr><td>Dodgers</td><td>-164</td><td><span style="color:#546e7a">—</span></td><td>Athletics</td><td>+138</td><td><span style="color:#ffca28">MEDIUM 0.5u (+6.0%)</span></td><td>9.5</td></tr><tr><td>Nationals</td><td>+160</td><td><span style="color:#ffca28">MEDIUM 0.5u (+5.7%)</span></td><td>Red Sox</td><td>-185</td><td><span style="color:#546e7a">—</span></td><td>9.5</td></tr><tr><td>Tigers</td><td>+120</td><td><span style="color:#ffca28">MEDIUM 0.5u (+5.7%)</span></td><td>Yankees</td><td>-142</td><td><span style="color:#546e7a">—</span></td><td>9.5</td></tr><tr><td>Pirates</td><td>+116</td><td><span style="color:#546e7a">—</span></td><td>Phillies</td><td>-136</td><td><span style="color:#ffca28">MEDIUM 0.5u (+5.4%)</span></td><td>8.5</td></tr><tr><td>Rays</td><td>-136</td><td><span style="color:#546e7a">—</span></td><td>Royals</td><td>+116</td><td><span style="color:#ffa726">LEAN 0.25u (+3.0%)</span></td><td>10.5</td></tr><tr><td>Rangers</td><td>-108</td><td><span style="color:#546e7a">—</span></td><td>Guardians</td><td>-112</td><td><span style="color:#ffa726">LEAN 0.25u (+2.6%)</span></td><td>8.5</td></tr><tr><td>Braves</td><td>-134</td><td><span style="color:#546e7a">—</span></td><td>Cardinals</td><td>+116</td><td><span style="color:#546e7a">—</span></td><td>8.5</td></tr><tr><td>Padres</td><td>+109</td><td><span style="color:#546e7a">—</span></td><td>Cubs</td><td>-131</td><td><span style="color:#546e7a">—</span></td><td>8.5</td></tr><tr><td>Mets</td><td>-116</td><td><span style="color:#546e7a">—</span></td><td>Blue Jays</td><td>-102</td><td><span style="color:#546e7a">—</span></td><td>8.5</td></tr><tr><td>White Sox</td><td>+145</td><td><span style="color:#546e7a">—</span></td><td>Orioles</td><td>-165</td><td><span style="color:#546e7a">—</span></td><td>8.5</td></tr></tbody>
+      <tbody><tr><td>Pittsburgh Pirates</td><td>+125</td><td><span style="color:#546e7a">—</span></td><td>Philadelphia Phillies</td><td>-150</td><td><span style="color:#546e7a">—</span></td><td>8.5</td></tr><tr><td>St. Louis Cardinals</td><td>+116</td><td><span style="color:#546e7a">—</span></td><td>Atlanta Braves</td><td>-134</td><td><span style="color:#546e7a">—</span></td><td>9.0</td></tr><tr><td>Tampa Bay Rays</td><td>-147</td><td><span style="color:#546e7a">—</span></td><td>Kansas City Royals</td><td>+125</td><td><span style="color:#00e676">HIGH 1.0u (+15.0%)</span></td><td>10.5</td></tr><tr><td>Cincinnati Reds</td><td>+135</td><td><span style="color:#546e7a">—</span></td><td>Milwaukee Brewers</td><td>-159</td><td><span style="color:#546e7a">—</span></td><td>9.0</td></tr><tr><td>Minnesota Twins</td><td>+122</td><td><span style="color:#546e7a">—</span></td><td>Houston Astros</td><td>-144</td><td><span style="color:#546e7a">—</span></td><td>8.5</td></tr><tr><td>Miami Marlins</td><td>-144</td><td><span style="color:#546e7a">—</span></td><td>Colorado Rockies</td><td>+125</td><td><span style="color:#00e676">HIGH 1.0u (+18.3%)</span></td><td>11.0</td></tr><tr><td>San Francisco Giants</td><td>+113</td><td><span style="color:#546e7a">—</span></td><td>Arizona Diamondbacks</td><td>-131</td><td><span style="color:#ffa726">LEAN 0.25u (+3.3%)</span></td><td>9.5</td></tr><tr><td>Los Angeles Dodgers</td><td>-166</td><td><span style="color:#546e7a">—</span></td><td>Athletics</td><td>+141</td><td><span style="color:#00e676">HIGH 1.0u (+16.1%)</span></td><td>11.0</td></tr></tbody>
     </table>
+  </div>
+  <div>
+    <div class="sec-title">XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26 — By Season</div>
+    <table>
+      <thead><tr><th>Season</th><th>Bets</th><th>W-L</th><th>Win%</th><th>ROI</th><th>Profit</th></tr></thead>
+      <tbody><tr><td>2022</td><td>521</td><td>306-215</td><td class='pos'>58.7%</td><td class='pos'>+12.1%</td><td class='pos'>+63u</td></tr><tr><td>2023</td><td>466</td><td>284-182</td><td class='pos'>60.9%</td><td class='pos'>+16.3%</td><td class='pos'>+76u</td></tr><tr><td>2024</td><td>463</td><td>284-179</td><td class='pos'>61.3%</td><td class='pos'>+17.1%</td><td class='pos'>+79u</td></tr><tr><td>2025</td><td>528</td><td>296-232</td><td class='pos'>56.1%</td><td class='pos'>+7.0%</td><td class='pos'>+37u</td></tr>
+        <tr class="tr-total">
+          <td>ALL</td><td>1,978</td><td>1170-808</td>
+          <td class="pos">59.2%</td>
+          <td class="pos">+13.2%</td>
+          <td class="pos">+260u</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--mut);margin-top:9px">
+      XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26. Flat -110 juice. 2021-2025 regular season.
+    </p>
+  </div>
+</div>
+</div>
+<div id="tab-rundown" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Today's Rundown — All 8 Games</div>
+  <div class="rd-grid">
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Pittsburgh Pirates @ Philadelphia Phillies</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Pittsburgh Pirates <span style="color:#546e7a;font-weight:400;font-size:11px">+125</span></div>
+        <div class="psr-info">Paul Skenes · Model: 40.7%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Philadelphia Phillies <span style="color:#546e7a;font-weight:400;font-size:11px">-150</span></div>
+        <div class="psr-info">Zack Wheeler · Model: 59.3%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Citizens Bank Park · PF 1.03</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">St. Louis Cardinals @ Atlanta Braves</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.0</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">St. Louis Cardinals <span style="color:#546e7a;font-weight:400;font-size:11px">+116</span></div>
+        <div class="psr-info">Michael McGreevy · Model: 41.0%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Atlanta Braves <span style="color:#546e7a;font-weight:400;font-size:11px">-134</span></div>
+        <div class="psr-info">Reynaldo López · Model: 59.0%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Truist Park · PF 1.05</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Tampa Bay Rays @ Kansas City Royals</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 10.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Tampa Bay Rays <span style="color:#546e7a;font-weight:400;font-size:11px">-147</span></div>
+        <div class="psr-info">Shane McClanahan · Model: 40.6%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Kansas City Royals <span style="color:#546e7a;font-weight:400;font-size:11px">+125</span></div>
+        <div class="psr-info">Seth Lugo · Model: 59.4%</div>
+      </div>
+      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Kauffman Stadium · PF 0.98</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Cincinnati Reds @ Milwaukee Brewers</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.0</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Cincinnati Reds <span style="color:#546e7a;font-weight:400;font-size:11px">+135</span></div>
+        <div class="psr-info">Andrew Abbott · Model: 40.0%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Milwaukee Brewers <span style="color:#546e7a;font-weight:400;font-size:11px">-159</span></div>
+        <div class="psr-info">Shane Drohan · Model: 60.0%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">American Family Field · PF 1.01</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Minnesota Twins @ Houston Astros</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Minnesota Twins <span style="color:#546e7a;font-weight:400;font-size:11px">+122</span></div>
+        <div class="psr-info">Taj Bradley · Model: 41.6%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Houston Astros <span style="color:#546e7a;font-weight:400;font-size:11px">-144</span></div>
+        <div class="psr-info">Tatsuya Imai · Model: 58.4%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Daikin Park · PF 1.00</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Miami Marlins @ Colorado Rockies</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 11.0</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Miami Marlins <span style="color:#546e7a;font-weight:400;font-size:11px">-144</span></div>
+        <div class="psr-info">Max Meyer · Model: 37.3%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Colorado Rockies <span style="color:#546e7a;font-weight:400;font-size:11px">+125</span></div>
+        <div class="psr-info">Kyle Freeland · Model: 62.7%</div>
+      </div>
+      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Coors Field · PF 1.38</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">San Francisco Giants @ Arizona Diamondbacks</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">San Francisco Giants <span style="color:#546e7a;font-weight:400;font-size:11px">+113</span></div>
+        <div class="psr-info">Trevor McDonald · Model: 40.0%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Arizona Diamondbacks <span style="color:#546e7a;font-weight:400;font-size:11px">-131</span></div>
+        <div class="psr-info">Zac Gallen · Model: 60.0%</div>
+      </div>
+      <span class="psr-badge" style="background:#ffa72622;color:#ffa726;border:1px solid #ffa726">LEAN</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Chase Field · PF 1.02</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Los Angeles Dodgers @ Athletics</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 11.0</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Los Angeles Dodgers <span style="color:#546e7a;font-weight:400;font-size:11px">-166</span></div>
+        <div class="psr-info">TBD · Model: 42.4%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Athletics <span style="color:#546e7a;font-weight:400;font-size:11px">+141</span></div>
+        <div class="psr-info">J.T. Ginn · Model: 57.6%</div>
+      </div>
+      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Sutter Health Park · PF 0.95</div>
+  </div>
+</div></div>
+</div>
+</div>
+<div id="tab-results" class="tab-panel">
+<div class="main">
+  
+  <div style="margin-bottom:32px">
+    <div class="sec-title">Yesterday — 2026-06-30 &nbsp;(<span style='color:#00e676'>Clean sweep</span>)</div>
+    <div class="stats-bar" style="border-radius:8px;margin-bottom:14px">
+      <div class="sc"><span class="sl">Record</span><span class="sv pos">4W-0L</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Units</span><span class="sv pos">+2.21u</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">P/L</span><span class="sv pos">+$55.14</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">ROI</span><span class="sv pos">+88.2%</span></div>
+    </div>
+    <table><thead><tr><th>Pick</th><th>Conv</th><th>Size</th><th>Result</th><th>P/L $</th></tr></thead>
+    <tbody><tr><td>Milwaukee Brewers -138</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$18.12</td></tr><tr><td>Detroit Tigers +124</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$15.50</td></tr><tr><td>Los Angeles Dodgers -175</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$7.15</td></tr><tr><td>Washington Nationals +115</td><td><span style='color:#aaa'>COND</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$14.37</td></tr></tbody></table>
+  </div>
+  
+  <div style="margin-bottom:32px">
+    <div class="sec-title">Bankroll Tracker — $500 Starting</div>
+    <div class="stats-bar" style="border-radius:8px;margin-bottom:18px">
+      <div class="sc"><span class="sl">Bankroll</span><span class="sv neg">$493.39</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">P/L</span><span class="sv neg">$-6.60</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">ROI</span><span class="sv neg">-1.3%</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Record</span><span class="sv">11W-9L</span></div>
+    </div>
+    <canvas id="bankrollChart" style="width:100%;max-height:220px;margin-bottom:18px"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script>
+    (function(){
+      var ctx=document.getElementById('bankrollChart').getContext('2d');
+      var labels=["Start","2026-06-26","2026-06-27","2026-06-28","2026-06-29","2026-06-30"],values=[500.0,475.5,450.75,430.24,438.25,493.39];
+      var color=values[values.length-1]>=500.0?'#00e676':'#ef5350';
+      window.__bankrollChart = new Chart(ctx,{type:'line',data:{labels:labels,datasets:[
+        {label:'Bankroll',data:values,borderColor:color,backgroundColor:color+'22',
+         borderWidth:2,pointRadius:labels.length<30?4:2,fill:true,tension:0.3},
+        {label:'Starting',data:Array(labels.length).fill(500.0),
+         borderColor:'#546e7a',borderWidth:1,borderDash:[6,4],pointRadius:0,fill:false}
+      ]},options:{responsive:true,
+        plugins:{legend:{labels:{color:'#cfd8dc',font:{size:12}}}},
+        scales:{x:{ticks:{color:'#78909c',maxTicksLimit:10},grid:{color:'#263238'}},
+                 y:{ticks:{color:'#78909c',callback:v=>'$'+v},grid:{color:'#263238'}}}
+      }});
+    })();
+    </script>
+    <table><thead><tr><th>Date</th><th>Pick</th><th>Conv</th><th>Size</th><th>Result</th><th>P/L $</th><th>Bankroll</th></tr></thead>
+    <tbody><tr><td>2026-06-30</td><td>Washington Nationals +115</td><td><span style='color:#aaa'>COND</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$14.37</td><td class='pos'>$493.39</td></tr><tr><td>2026-06-30</td><td>Los Angeles Dodgers -175</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$7.15</td><td class='pos'>$479.02</td></tr><tr><td>2026-06-30</td><td>Detroit Tigers +124</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$15.50</td><td class='pos'>$471.87</td></tr><tr><td>2026-06-30</td><td>Milwaukee Brewers -138</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$18.12</td><td class='pos'>$456.37</td></tr><tr><td>2026-06-29</td><td>Detroit Tigers +129</td><td><span style='color:#ffa726'>LEAN</span></td><td>0.25u</td><td class='pos'>W</td><td class='pos'>+$8.08</td><td class='pos'>$438.25</td></tr><tr><td>2026-06-29</td><td>San Diego Padres +140</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$430.17</td></tr><tr><td>2026-06-29</td><td>Minnesota Twins +118</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$14.75</td><td class='pos'>$442.67</td></tr><tr><td>2026-06-29</td><td>Chicago White Sox +121</td><td><span style='color:#00e676'>HIGH</span></td><td>0.75u</td><td class='pos'>W</td><td class='pos'>+$22.68</td><td class='pos'>$427.92</td></tr><tr><td>2026-06-29</td><td>Washington Nationals +155</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$405.24</td></tr><tr><td>2026-06-28</td><td>Boston Red Sox -120</td><td><span style='color:#ffa726'>LEAN</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$10.42</td><td class='pos'>$430.24</td></tr><tr><td>2026-06-28</td><td>Houston Astros -131</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$19.07</td><td class='pos'>$419.82</td></tr><tr><td>2026-06-28</td><td>San Diego Padres +118</td><td><span style='color:#69f0ae'>MED-HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$400.75</td></tr><tr><td>2026-06-28</td><td>Atlanta Braves -162</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$425.75</td></tr><tr><td>2026-06-27</td><td>Atlanta Braves -122</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$450.75</td></tr><tr><td>2026-06-27</td><td>Boston Red Sox +102</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$12.75</td><td class='pos'>$463.25</td></tr><tr><td>2026-06-27</td><td>Milwaukee Brewers -169</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$450.50</td></tr><tr><td>2026-06-26</td><td>New York Yankees -110</td><td><span style='color:#ffa726'>LEAN</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$475.50</td></tr><tr><td>2026-06-26</td><td>Houston Astros -102</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$488.00</td></tr><tr><td>2026-06-26</td><td>Miami Marlins +102</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$25.50</td><td class='pos'>$500.50</td></tr><tr><td>2026-06-26</td><td>Washington Nationals +120</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$475.00</td></tr></tbody></table>
   </div>
   
   <div style="margin-bottom:32px">
@@ -723,341 +833,115 @@ tr:hover td{background:var(--sur2);}
       </div>
     </div>
   </div>
+</div>
+</div>
+<div id="tab-weekly" class="tab-panel">
+<div class="main">
   
-  <div>
-    <div class="sec-title">XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26 — By Season</div>
-    <table>
-      <thead><tr><th>Season</th><th>Bets</th><th>W-L</th><th>Win%</th><th>ROI</th><th>Profit</th></tr></thead>
-      <tbody><tr><td>2022</td><td>521</td><td>306-215</td><td class='pos'>58.7%</td><td class='pos'>+12.1%</td><td class='pos'>+63u</td></tr><tr><td>2023</td><td>466</td><td>284-182</td><td class='pos'>60.9%</td><td class='pos'>+16.3%</td><td class='pos'>+76u</td></tr><tr><td>2024</td><td>463</td><td>284-179</td><td class='pos'>61.3%</td><td class='pos'>+17.1%</td><td class='pos'>+79u</td></tr><tr><td>2025</td><td>528</td><td>296-232</td><td class='pos'>56.1%</td><td class='pos'>+7.0%</td><td class='pos'>+37u</td></tr>
-        <tr class="tr-total">
-          <td>ALL</td><td>1,978</td><td>1170-808</td>
-          <td class="pos">59.2%</td>
-          <td class="pos">+13.2%</td>
-          <td class="pos">+260u</td>
-        </tr>
-      </tbody>
-    </table>
-    <p style="font-size:11px;color:var(--mut);margin-top:9px">
-      XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26. Flat -110 juice. 2021-2025 regular season.
-    </p>
+  <div style="margin-bottom:28px">
+    <div class="sec-title">Weekly Report — last 7 days</div>
+    <div class="stats-bar" style="border-radius:8px;margin-bottom:14px">
+      <div class="sc"><span class="sl">Record</span><span class="sv neg">11W-9L</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Win Rate</span><span class="sv neg">55.0%</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Units</span><span class="sv neg">-0.26u</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">P/L</span><span class="sv neg">$-6.61</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">ROI</span><span class="sv neg">-1.9%</span></div>
+    </div>
+    <table><thead><tr><th>Day</th><th>W-L</th><th>Staked</th><th>P/L (u)</th><th>P/L $</th><th>ROI</th></tr></thead>
+    <tbody><tr><td>2026-06-26</td><td>1-3</td><td>3.00u</td><td class='neg'>-0.98u</td><td class='neg'>$-24.50</td><td class='neg'>-32.7%</td></tr><tr><td>2026-06-27</td><td>1-2</td><td>2.00u</td><td class='neg'>-0.99u</td><td class='neg'>$-24.75</td><td class='neg'>-49.5%</td></tr><tr><td>2026-06-28</td><td>2-2</td><td>3.50u</td><td class='neg'>-0.82u</td><td class='neg'>$-20.51</td><td class='neg'>-23.4%</td></tr><tr><td>2026-06-29</td><td>3-2</td><td>3.00u</td><td class='pos'>+0.32u</td><td class='pos'>+$8.01</td><td class='pos'>+10.7%</td></tr><tr><td>2026-06-30</td><td>4-0</td><td>2.50u</td><td class='pos'>+2.21u</td><td class='pos'>+$55.14</td><td class='pos'>+88.2%</td></tr>
+      <tr class="tr-total"><td>7-DAY</td><td>11-9</td><td>14.00u</td>
+      <td class="neg">-0.26u</td>
+      <td class="neg">$-6.61</td>
+      <td class="neg">-1.9%</td></tr>
+    </tbody></table>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px">
+      <div style="flex:1;min-width:240px"><span class="sl">Best day</span><br><span class="pos" style="font-size:13px">2026-06-30 (4-0, +$55.14)</span></div>
+      <div style="flex:1;min-width:240px"><span class="sl">Worst day</span><br><span class="neg" style="font-size:13px">2026-06-27 (1-2, $-24.75)</span></div>
+    </div>
   </div>
 </div>
-</div><div id="tab-rundown" class="tab-panel"><div class="main">  <div class="sec-title">Today's Rundown — All 11 Games</div>  <div class="rd-grid">
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Diamondbacks @ Giants</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 7.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Diamondbacks <span style="color:#546e7a;font-weight:400;font-size:11px">-116</span></div>
-        <div class="psr-info">Z. Gallen · Model: 41.6%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Giants <span style="color:#546e7a;font-weight:400;font-size:11px">+100</span></div>
-        <div class="psr-info">T. McDonald · Model: 58.4%</div>
-      </div>
-      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Oracle Park · PF 0.93</div>
-  </div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Dodgers @ Athletics</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Dodgers <span style="color:#546e7a;font-weight:400;font-size:11px">-164</span></div>
-        <div class="psr-info">G. Detmers · Model: 52.0%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Athletics <span style="color:#546e7a;font-weight:400;font-size:11px">+138</span></div>
-        <div class="psr-info">J.T. Ginn · Model: 48.0%</div>
-      </div>
-      <span class="psr-badge" style="background:#ffca2822;color:#ffca28;border:1px solid #ffca28">MEDIUM</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Sutter Health Park · PF 0.95</div>
-  </div>
+<div id="tab-parlays" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Parlay Builder — 2026-07-01</div>
+  <p style="font-size:12px;color:var(--mut);margin-bottom:16px">Auto-generated from today's model picks. Parlays shown in edge-descending order. Model edge = fair combined probability vs market implied probability.</p>
+  <div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Top 2-Team Parlay — Colorado Rockies + Athletics</div><div class="parlay-type">2-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Colorado Rockies <span style="font-size:11px;color:var(--mut)">vs Miami Marlins</span></span><span class="parlay-ml" style="margin-right:8px">+125</span><span class="parlay-edge" style="color:var(--grn)">+18.3%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Athletics <span style="font-size:11px;color:var(--mut)">vs Los Angeles Dodgers</span></span><span class="parlay-ml" style="margin-right:8px">+141</span><span class="parlay-edge" style="color:var(--grn)">+16.1%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+442</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+95.9%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">36.1%</span></div></div></div>
+<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Top 3-Team Parlay — Colorado Rockies + Athletics + Kansas City Royals</div><div class="parlay-type">3-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Colorado Rockies <span style="font-size:11px;color:var(--mut)">vs Miami Marlins</span></span><span class="parlay-ml" style="margin-right:8px">+125</span><span class="parlay-edge" style="color:var(--grn)">+18.3%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Athletics <span style="font-size:11px;color:var(--mut)">vs Los Angeles Dodgers</span></span><span class="parlay-ml" style="margin-right:8px">+141</span><span class="parlay-edge" style="color:var(--grn)">+16.1%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Kansas City Royals <span style="font-size:11px;color:var(--mut)">vs Tampa Bay Rays</span></span><span class="parlay-ml" style="margin-right:8px">+125</span><span class="parlay-edge" style="color:var(--grn)">+15.0%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+1120</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+162.0%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">21.5%</span></div></div></div>
+<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Power Parlay — Colorado Rockies + Athletics + Kansas City Royals + Arizona Diamondbacks</div><div class="parlay-type">4-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Colorado Rockies <span style="font-size:11px;color:var(--mut)">vs Miami Marlins</span></span><span class="parlay-ml" style="margin-right:8px">+125</span><span class="parlay-edge" style="color:var(--grn)">+18.3%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Athletics <span style="font-size:11px;color:var(--mut)">vs Los Angeles Dodgers</span></span><span class="parlay-ml" style="margin-right:8px">+141</span><span class="parlay-edge" style="color:var(--grn)">+16.1%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Kansas City Royals <span style="font-size:11px;color:var(--mut)">vs Tampa Bay Rays</span></span><span class="parlay-ml" style="margin-right:8px">+125</span><span class="parlay-edge" style="color:var(--grn)">+15.0%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffa72633;color:#ffa726">LEAN</span><span class="parlay-team">Arizona Diamondbacks <span style="font-size:11px;color:var(--mut)">vs San Francisco Giants</span></span><span class="parlay-ml" style="margin-right:8px">-131</span><span class="parlay-edge" style="color:var(--grn)">+3.3%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+2051</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+177.4%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">12.9%</span></div></div></div>
+<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Value Parlay — Medium+ conviction only</div><div class="parlay-type">VALUE</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Colorado Rockies <span style="font-size:11px;color:var(--mut)">vs Miami Marlins</span></span><span class="parlay-ml" style="margin-right:8px">+125</span><span class="parlay-edge" style="color:var(--grn)">+18.3%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Athletics <span style="font-size:11px;color:var(--mut)">vs Los Angeles Dodgers</span></span><span class="parlay-ml" style="margin-right:8px">+141</span><span class="parlay-edge" style="color:var(--grn)">+16.1%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Kansas City Royals <span style="font-size:11px;color:var(--mut)">vs Tampa Bay Rays</span></span><span class="parlay-ml" style="margin-right:8px">+125</span><span class="parlay-edge" style="color:var(--grn)">+15.0%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+1120</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+162.0%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">21.5%</span></div></div></div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Nationals @ Red Sox</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Nationals <span style="color:#546e7a;font-weight:400;font-size:11px">+160</span></div>
-        <div class="psr-info">M. Gore · Model: 44.2%</div>
-      </div>
-      <span class="psr-badge" style="background:#ffca2822;color:#ffca28;border:1px solid #ffca28">MEDIUM</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Red Sox <span style="color:#546e7a;font-weight:400;font-size:11px">-185</span></div>
-        <div class="psr-info">B. Bello · Model: 55.8%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Fenway Park · PF 1.09</div>
-  </div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Tigers @ Yankees</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Tigers <span style="color:#546e7a;font-weight:400;font-size:11px">+120</span></div>
-        <div class="psr-info">T. Melton · Model: 51.1%</div>
-      </div>
-      <span class="psr-badge" style="background:#ffca2822;color:#ffca28;border:1px solid #ffca28">MEDIUM</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Yankees <span style="color:#546e7a;font-weight:400;font-size:11px">-142</span></div>
-        <div class="psr-info">W. Warren · Model: 48.9%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Yankee Stadium · PF 1.03</div>
-  </div>
+<div id="tab-news" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Bettor News &amp; Market Intel — 2026-07-01</div>
+  <p style="font-size:12px;color:var(--mut);margin-bottom:12px">Line movement, sharp action, steam moves, and market observations.</p>
+  <div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Kansas City Royals</strong> HIGH vs Tampa Bay Rays — edge +15.0% | Model edge +15.0%: market prices Kansas City Royals at 44.4%, model says 59.4%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
+<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Colorado Rockies</strong> HIGH vs Miami Marlins — edge +18.3% | Model edge +18.3%: market prices Colorado Rockies at 44.4%, model says 62.7%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
+<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#ffa726">Arizona Diamondbacks</strong> LEAN vs San Francisco Giants — edge +3.3% | Model edge +3.3%: market prices Arizona Diamondbacks at 56.7%, model says 60.0%</div><div class="news-meta">Conviction: LEAN · Units: 0.25u · Model edge vs market implied</div></div>
+<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Athletics</strong> HIGH vs Los Angeles Dodgers — edge +16.1% | Model edge +16.1%: market prices Athletics at 41.5%, model says 57.6%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Pirates @ Phillies</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Pirates <span style="color:#546e7a;font-weight:400;font-size:11px">+116</span></div>
-        <div class="psr-info">L. Gibson · Model: 37.0%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Phillies <span style="color:#546e7a;font-weight:400;font-size:11px">-136</span></div>
-        <div class="psr-info">Z. Wheeler · Model: 63.0%</div>
-      </div>
-      <span class="psr-badge" style="background:#ffca2822;color:#ffca28;border:1px solid #ffca28">MEDIUM</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Citizens Bank Park · PF 1.03</div>
-  </div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Rays @ Royals</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 10.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Rays <span style="color:#546e7a;font-weight:400;font-size:11px">-136</span></div>
-        <div class="psr-info">Z. Eflin · Model: 50.7%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Royals <span style="color:#546e7a;font-weight:400;font-size:11px">+116</span></div>
-        <div class="psr-info">M. Wacha · Model: 49.3%</div>
-      </div>
-      <span class="psr-badge" style="background:#ffa72622;color:#ffa726;border:1px solid #ffa726">LEAN</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Kauffman Stadium · PF 0.98</div>
-  </div>
+<div id="tab-trends" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Social Intel — Injuries, Weather &amp; Rumors — 2026-07-01</div>
+  <div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Pittsburgh Pirates @ Philadelphia Phillies<span class="heat heat-warm">🌡 HITTER</span></div><div class="trend-desc">Citizens Bank Park · PF 1.030 (Hitter-friendly) · Paul Skenes vs Zack Wheeler · O/U 8.5</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>St. Louis Cardinals @ Atlanta Braves<span class="heat heat-warm">🌡 HITTER</span></div><div class="trend-desc">Truist Park · PF 1.050 (Hitter-friendly) · Michael McGreevy vs Reynaldo López · O/U 9.0</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Tampa Bay Rays @ Kansas City Royals<span class="heat heat-cool">📊 PITCHER</span></div><div class="trend-desc">Kauffman Stadium · PF 0.980 (Neutral park) · Shane McClanahan vs Seth Lugo · O/U 10.5</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Cincinnati Reds @ Milwaukee Brewers<span class="heat heat-cool">📊 PITCHER</span></div><div class="trend-desc">American Family Field · PF 1.010 (Neutral park) · Andrew Abbott vs Shane Drohan · O/U 9.0</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Minnesota Twins @ Houston Astros<span class="heat heat-cool">📊 PITCHER</span></div><div class="trend-desc">Daikin Park · PF 1.000 (Neutral park) · Taj Bradley vs Tatsuya Imai · O/U 8.5</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Miami Marlins @ Colorado Rockies<span class="heat heat-warm">🌡 HITTER</span></div><div class="trend-desc">Coors Field · PF 1.380 (Hitter-friendly) · Max Meyer vs Kyle Freeland · O/U 11.0</div></div></div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Rangers @ Guardians</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Rangers <span style="color:#546e7a;font-weight:400;font-size:11px">-108</span></div>
-        <div class="psr-info">P. Tolle · Model: 44.5%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Guardians <span style="color:#546e7a;font-weight:400;font-size:11px">-112</span></div>
-        <div class="psr-info">J. Cantillo · Model: 55.5%</div>
-      </div>
-      <span class="psr-badge" style="background:#ffa72622;color:#ffa726;border:1px solid #ffa726">LEAN</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Progressive Field · PF 0.96</div>
-  </div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Braves @ Cardinals</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Braves <span style="color:#546e7a;font-weight:400;font-size:11px">-134</span></div>
-        <div class="psr-info">R. Lopez · Model: 52.0%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Cardinals <span style="color:#546e7a;font-weight:400;font-size:11px">+116</span></div>
-        <div class="psr-info">M. Liberatore · Model: 48.0%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Busch Stadium · PF 0.96</div>
-  </div>
+<div id="tab-umps" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Home Plate Umpires — 2026-07-01</div>
+  
+<div class="ump-table-wrap">
+<table>
+  <thead><tr><th>HP Umpire</th><th>Game</th><th>Grade</th><th>Score</th><th>Zone Tendency</th><th>O/U Impact</th></tr></thead>
+  <tbody><tr><td colspan="6" style="color:var(--mut);text-align:center">No umpire data available.</td></tr></tbody>
+</table>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Padres @ Cubs</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Padres <span style="color:#546e7a;font-weight:400;font-size:11px">+109</span></div>
-        <div class="psr-info">W. Buehler · Model: 49.4%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Cubs <span style="color:#546e7a;font-weight:400;font-size:11px">-131</span></div>
-        <div class="psr-info">J. Steele · Model: 50.6%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Wrigley Field · PF 1.04</div>
-  </div>
+<p style="font-size:11px;color:var(--mut);margin-top:10px">Grades: A=Consistent/fair · B=Average · C=Inconsistent · D=Erratic. Zone and O/U impact derived from historical tendencies.</p>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">Mets @ Blue Jays</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Mets <span style="color:#546e7a;font-weight:400;font-size:11px">-116</span></div>
-        <div class="psr-info">S. Manaea · Model: 48.1%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Blue Jays <span style="color:#546e7a;font-weight:400;font-size:11px">-102</span></div>
-        <div class="psr-info">K. Gausman · Model: 51.9%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Rogers Centre · PF 1.00</div>
-  </div>
 </div>
-
-<div class="rd-card">
-  <div class="rd-hdr">
-    <div class="rd-hdr-left">White Sox @ Orioles</div>
-    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
-  </div>
-  <div class="rd-body">
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">White Sox <span style="color:#546e7a;font-weight:400;font-size:11px">+145</span></div>
-        <div class="psr-info">P. Corbin · Model: 39.5%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div class="psr">
-      <div class="psr-teams">
-        <div class="psr-name">Orioles <span style="color:#546e7a;font-weight:400;font-size:11px">-165</span></div>
-        <div class="psr-info">C. Irvin · Model: 60.5%</div>
-      </div>
-      <span style="font-size:10px;color:#546e7a">—</span>
-    </div>
-    <div style="font-size:10px;color:#546e7a;margin-top:6px">Oriole Park at Camden Yards · PF 1.00</div>
-  </div>
-</div></div></div></div><div id="tab-parlays" class="tab-panel"><div class="main">  <div class="sec-title">Parlay Builder — 2026-07-01</div>  <p style="font-size:12px;color:var(--mut);margin-bottom:16px">Auto-generated from today's model picks. Model edge = fair combined probability vs market implied probability.</p>  <div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Best Value Parlay - Giants + Athletics</div><div class="parlay-type">2-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Giants <span style="font-size:11px;color:var(--mut)">vs Diamondbacks</span></span><span class="parlay-ml" style="margin-right:8px">+100</span><span class="parlay-edge" style="color:var(--grn)">+8.4%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffca2833;color:#ffca28">MEDIUM</span><span class="parlay-team">Athletics <span style="font-size:11px;color:var(--mut)">vs Dodgers</span></span><span class="parlay-ml" style="margin-right:8px">+138</span><span class="parlay-edge" style="color:var(--grn)">+6.0%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+376</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+33.4%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">28.0%</span></div></div></div>
-<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Top 3-Team Parlay - Giants + Athletics + Nationals</div><div class="parlay-type">3-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Giants <span style="font-size:11px;color:var(--mut)">vs Diamondbacks</span></span><span class="parlay-ml" style="margin-right:8px">+100</span><span class="parlay-edge" style="color:var(--grn)">+8.4%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffca2833;color:#ffca28">MEDIUM</span><span class="parlay-team">Athletics <span style="font-size:11px;color:var(--mut)">vs Dodgers</span></span><span class="parlay-ml" style="margin-right:8px">+138</span><span class="parlay-edge" style="color:var(--grn)">+6.0%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffca2833;color:#ffca28">MEDIUM</span><span class="parlay-team">Nationals <span style="font-size:11px;color:var(--mut)">vs Red Sox</span></span><span class="parlay-ml" style="margin-right:8px">+160</span><span class="parlay-edge" style="color:var(--grn)">+5.7%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+1138</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+53.3%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">12.4%</span></div></div></div>
-<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Medium Tier Parlay - Athletics + Nationals + Tigers</div><div class="parlay-type">3-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffca2833;color:#ffca28">MEDIUM</span><span class="parlay-team">Athletics <span style="font-size:11px;color:var(--mut)">vs Dodgers</span></span><span class="parlay-ml" style="margin-right:8px">+138</span><span class="parlay-edge" style="color:var(--grn)">+6.0%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffca2833;color:#ffca28">MEDIUM</span><span class="parlay-team">Nationals <span style="font-size:11px;color:var(--mut)">vs Red Sox</span></span><span class="parlay-ml" style="margin-right:8px">+160</span><span class="parlay-edge" style="color:var(--grn)">+5.7%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffca2833;color:#ffca28">MEDIUM</span><span class="parlay-team">Tigers <span style="font-size:11px;color:var(--mut)">vs Yankees</span></span><span class="parlay-ml" style="margin-right:8px">+120</span><span class="parlay-edge" style="color:var(--grn)">+5.7%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+1261</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+47.6%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">10.8%</span></div></div></div>
-<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Value Parlay - Giants + Phillies</div><div class="parlay-type">VALUE</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Giants <span style="font-size:11px;color:var(--mut)">vs Diamondbacks</span></span><span class="parlay-ml" style="margin-right:8px">+100</span><span class="parlay-edge" style="color:var(--grn)">+8.4%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#ffca2833;color:#ffca28">MEDIUM</span><span class="parlay-team">Phillies <span style="font-size:11px;color:var(--mut)">vs Pirates</span></span><span class="parlay-ml" style="margin-right:8px">-136</span><span class="parlay-edge" style="color:var(--grn)">+5.4%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+247</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+27.7%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">36.8%</span></div></div></div></div></div><div id="tab-news" class="tab-panel"><div class="main">  <div class="sec-title">Bettor News &amp; Market Intel — 2026-07-01</div>  <p style="font-size:12px;color:var(--mut);margin-bottom:12px">Line movement, sharp action, steam moves, and market observations.</p>  <div class="news-item"><div class="news-hl"><span class="news-tag nt-line">LINE</span>Giants +100 - line moved from +115 to +100 overnight</div><div class="news-meta">Public backing Giants at Oracle. Sharp action on SF confirmed by reverse line movement. Market respects McDonald matchup vs Gallen.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-sharp">SHARP</span>Athletics +138 - sharp reverse-line movement vs Dodgers -164</div><div class="news-meta">Heavy public money on LAD but books nudging line toward OAK. Classic sharp-vs-public split. Ginn holding his own at Sutter Health Park.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">VALUE</span>Nationals +160 - massive underdog value vs Red Sox at Fenway</div><div class="news-meta">Gore (3.90 ERA) vs Bello (3.90 ERA) is a near-even pitching matchup. WSH implied at 35% -- model gives 41%. +6% edge. Public sleeping on road dogs.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-line">MARKET</span>Phillies -136 line steady - public and sharp both on PHI</div><div class="news-meta">Wheeler (2.03 ERA, 1.90 FIP) among the best starters in baseball. Heavy consensus. Model still finds +5.4% edge. No reverse line movement.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-weather">SWING</span>Tigers line moved +125 to +120 - books tightening vs NYY</div><div class="news-meta">Melton (2.39 ERA) elite; books shading toward Yankees after lineup news. Model still gives DET significant edge on pitching differential.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-sharp">STEAM</span>NYY-DET O/U steaming DOWN from 9.5 to 9.0 at sharp books</div><div class="news-meta">Melton ERA + Warren numbers pushing sharp money UNDER. Monitor final total before game time.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-line">LINE</span>Royals +116 stable - public backing KC as home dog vs Rays</div><div class="news-meta">Wacha vs Eflin veteran matchup. Market settled at +116. Minimal movement. Model edge +3.0% -- marginal LEAN play.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-line">MARKET</span>Guardians -112 - CLE drifted from -108 open</div><div class="news-meta">Books opened CLE -108, moved to -112. Slight market confirmation. Model gives +2.6% edge. LEAN play only.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-sharp">SHARP</span>Cardinals +116 - public money on STL but below model threshold</div><div class="news-meta">1.7% edge below 2% minimum -- not recommended. Notable public interest in Busch Stadium dog but model says pass.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-sharp">REVERSE</span>Padres +109 - reverse line movement NOT confirmed. Pass.</div><div class="news-meta">1.6% edge below model threshold. Market moved against Padres. Stay off.</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Giants</strong> HIGH vs Diamondbacks — edge +8.4% | Model edge +8.4%: market prices Giants at 50.0%, model says 58.4%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#ffca28">Athletics</strong> MEDIUM vs Dodgers — edge +6.0% | Model edge +6.0%: market prices Athletics at 42.0%, model says 48.0%</div><div class="news-meta">Conviction: MEDIUM · Units: 0.5u · Model edge vs market implied</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#ffca28">Nationals</strong> MEDIUM vs Red Sox — edge +5.7% | Model edge +5.7%: market prices Nationals at 38.5%, model says 44.2%</div><div class="news-meta">Conviction: MEDIUM · Units: 0.5u · Model edge vs market implied</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#ffca28">Tigers</strong> MEDIUM vs Yankees — edge +5.7% | Model edge +5.7%: market prices Tigers at 45.5%, model says 51.1%</div><div class="news-meta">Conviction: MEDIUM · Units: 0.5u · Model edge vs market implied</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#ffca28">Phillies</strong> MEDIUM vs Pirates — edge +5.4% | Model edge +5.4%: market prices Phillies at 57.6%, model says 63.0%</div><div class="news-meta">Conviction: MEDIUM · Units: 0.5u · Model edge vs market implied</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#ffa726">Royals</strong> LEAN vs Rays — edge +3.0% | Model edge +3.0%: market prices Royals at 46.3%, model says 49.3%</div><div class="news-meta">Conviction: LEAN · Units: 0.25u · Model edge vs market implied</div></div>
-<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#ffa726">Guardians</strong> LEAN vs Rangers — edge +2.6% | Model edge +2.6%: market prices Guardians at 52.8%, model says 55.5%</div><div class="news-meta">Conviction: LEAN · Units: 0.25u · Model edge vs market implied</div></div></div></div><div id="tab-trends" class="tab-panel"><div class="main">  <div class="sec-title">Social Intel — Injuries, Weather &amp; Rumors — 2026-07-01</div>  <div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">WEATHER</span>Oracle Park (Giants vs D-backs) - Cold, Winds In</div><div class="trend-desc">52F, 12-16 mph wind blowing in from left-center. Oracle already suppresses offense; today's wind compounds it. Favors McDonald and Gallen. O/U 7.5 lowest on slate.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">WEATHER</span>Sutter Health Park (Dodgers @ Athletics) - Hot & Dry</div><div class="trend-desc">Sacramento 92F, minimal wind. Heat and ball flight favor hitters. O/U 9.5 reflects run environment. Detmers flyball tendencies could be exposed in this setting.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">🚑</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-injury">INJURY</span>Yankees SP Warren - Blister Concern (Monitor)</div><div class="trend-desc">Warren dealt with blister last outing (June 28 vs BOS). No IL listing but watch lineup card. If scratched, shifts heavily toward Tigers and bullpen game scenario.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">🚑</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-injury">INJURY</span>Dodgers bullpen - Treinen unavailable today</div><div class="trend-desc">Blake Treinen unavailable per Roberts on June 30. Depleted relief corps if Detmers goes less than 5 IP. Reinforces Athletics +138 value -- LAD pen thinner than usual.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">📡</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-rumor">RUMOR</span>Athletics - Ginn trade rumors ahead of August 1 deadline</div><div class="trend-desc">Multiple AL contenders linked to Ginn ahead of August deadline. No imminent deal. Ginn motivated to showcase value today -- intangible positive for OAK.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">WEATHER</span>Fenway Park (Nationals @ Red Sox) - Wind Out Right</div><div class="trend-desc">10-14 mph winds toward right field. Both Gore and Bello are ground-ball arms -- wind impact limited. WSH still massive underdog despite near-even pitching matchup.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">🔄</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-trade">TRADE</span>Tigers - AAA call-ups added lineup depth</div><div class="trend-desc">DET added outfield depth from AAA this week. Platoon flexibility vs Yankees bullpen. Marginal boost to Tigers run ceiling in a game where Melton should keep it close.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">💪</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-bullpen">BULLPEN</span>Royals bullpen - Fully rested after June 30 off day</div><div class="trend-desc">KC pen fully available. Wacha targeted 6 IP. If Royals get a lead, excellent late-inning coverage -- reinforces LEAN play on KC +116.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">WEATHER</span>Kauffman Stadium (Rays @ Royals) - Warm & Humid</div><div class="trend-desc">88F, 65% humidity. Slight offense-friendly conditions. O/U 10.5 highest on slate -- but both bullpens are strong. Total may stay under despite conditions.</div></div></div>
-<div class="trend-item"><div class="trend-rank" style="font-size:18px">🚑</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-injury">INJURY</span>Nationals - Full lineup, no injury flags</div><div class="trend-desc">Complete WSH roster available. Gore strong last 3 starts (2.89 ERA). No IL moves. Nationals quietly competitive -- +160 may be steepest value on today's board.</div></div></div></div></div><div id="tab-umps" class="tab-panel"><div class="main">  <div class="sec-title">Home Plate Umpires — 2026-07-01</div>  <div class="ump-table-wrap"><table>  <thead><tr><th>HP Umpire</th><th>Game</th><th>Grade</th><th>Score</th><th>Zone Tendency</th><th>O/U Impact</th></tr></thead>  <tbody><tr><td colspan="6" style="color:var(--mut);text-align:center">No umpire data available.</td></tr></tbody></table></div><p style="font-size:11px;color:var(--mut);margin-top:10px">Grades: A=Consistent/fair · B=Average · C=Inconsistent · D=Erratic.</p></div></div><div class="modal-overlay" id="modalOverlay" onclick="overlayClick(event)">  <div class="modal" id="modalContent"></div></div><script>
-var MODAL_DATA = {"Giants_Diamondbacks_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Giants <span style=\"color:#00e676\">+100</span> <span style=\"font-size:12px;color:var(--mut)\">vs Diamondbacks</span></div><div class=\"modal-sub\">T. McDonald (RHP) vs Z. Gallen (RHP)  |  HIGH 1.0u  |  Edge +8.4%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">58.4%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">50.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+8.4%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+100</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">T. McDonald (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val bad\">4.60</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val bad\">4.60</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val warn\">1.35</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val warn\">8.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--mut);font-weight:700'>--</span>  &nbsp;Last-5 ERA: <strong>4.50</strong></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Giants — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Giants</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">50.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Diamondbacks</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">44.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Oracle Park</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">0.930</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"><span style=\"font-size:11px;color:var(--mut)\">4 books</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +8.4%: market prices Giants at 50.0%, model says 58.4%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">T. McDonald FIP 4.60 vs opp FIP 6.30 — 1.70 FIP edge (defense-independent)</div></div>\n</div></div>", "Athletics_Dodgers_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #ffca28\"><div><div class=\"modal-title\">Athletics <span style=\"color:#ffca28\">+138</span> <span style=\"font-size:12px;color:var(--mut)\">vs Dodgers</span></div><div class=\"modal-sub\">J.T. Ginn (RHP) vs G. Detmers (RHP)  |  MEDIUM 0.5u  |  Edge +6.0%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#ffca28\">48.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">42.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#ffca28\">+6.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#ffca28;font-size:12px\">MEDIUM</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">0.5u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+138</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">J.T. Ginn (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val warn\">4.00</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.10</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.10</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val warn\">1.28</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val warn\">7.8</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--mut);font-weight:700'>--</span>  &nbsp;Last-5 ERA: <strong>4.00</strong></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Athletics — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#ffca28\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#ffca28\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Athletics</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">40.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Dodgers</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">64.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Sutter Health Park</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">0.950</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"><span style=\"font-size:11px;color:var(--mut)\">4 books</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +6.0%: market prices Athletics at 42.0%, model says 48.0%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Underdog value at +138 — only needs 42% win rate to be +EV long-term</div></div>\n</div></div>", "Nationals_Red_Sox_away": "<div class=\"modal-hdr\" style=\"border-top:3px solid #ffca28\"><div><div class=\"modal-title\">Nationals <span style=\"color:#ffca28\">+160</span> <span style=\"font-size:12px;color:var(--mut)\">vs Red Sox</span></div><div class=\"modal-sub\">M. Gore (RHP) vs B. Bello (RHP)  |  MEDIUM 0.5u  |  Edge +5.7%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#ffca28\">44.2%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">38.5%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#ffca28\">+5.7%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#ffca28;font-size:12px\">MEDIUM</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">0.5u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+160</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">M. Gore (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val warn\">4.20</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.20</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.20</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val warn\">1.30</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val good\">9.5</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--mut);font-weight:700'>--</span>  &nbsp;Last-5 ERA: <strong>4.20</strong></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Nationals — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#ffca28\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#ffca28\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Nationals</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">42.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Red Sox</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">55.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Fenway Park</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.090</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"><span style=\"font-size:11px;color:var(--mut)\">4 books</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +5.7%: market prices Nationals at 38.5%, model says 44.2%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">M. Gore K/9 9.5 — elite strikeout rate, hard to score against</div></div>\n</div></div>", "Tigers_Yankees_away": "<div class=\"modal-hdr\" style=\"border-top:3px solid #ffca28\"><div><div class=\"modal-title\">Tigers <span style=\"color:#ffca28\">+120</span> <span style=\"font-size:12px;color:var(--mut)\">vs Yankees</span></div><div class=\"modal-sub\">T. Melton (RHP) vs W. Warren (RHP)  |  MEDIUM 0.5u  |  Edge +5.7%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#ffca28\">51.1%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">45.5%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#ffca28\">+5.7%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#ffca28;font-size:12px\">MEDIUM</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">0.5u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+120</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">T. Melton (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val good\">2.39</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val good\">2.60</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val good\">2.60</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val good\">0.85</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val warn\">7.2</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--mut);font-weight:700'>--</span>  &nbsp;Last-5 ERA: <strong>2.39</strong></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Tigers — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#ffca28\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#ffca28\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Tigers</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">52.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Yankees</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">50.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Yankee Stadium</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.030</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"><span style=\"font-size:11px;color:var(--mut)\">4 books</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +5.7%: market prices Tigers at 45.5%, model says 51.1%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">T. Melton FIP 2.60 vs opp FIP 3.90 — 1.30 FIP edge (defense-independent)</div></div>\n</div></div>", "Phillies_Pirates_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #ffca28\"><div><div class=\"modal-title\">Phillies <span style=\"color:#ffca28\">-136</span> <span style=\"font-size:12px;color:var(--mut)\">vs Pirates</span></div><div class=\"modal-sub\">Z. Wheeler (RHP) vs L. Gibson (RHP)  |  MEDIUM 0.5u  |  Edge +5.4%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#ffca28\">63.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">57.6%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#ffca28\">+5.4%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#ffca28;font-size:12px\">MEDIUM</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">0.5u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">-136</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Z. Wheeler (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val good\">2.03</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val good\">1.90</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val good\">1.90</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val good\">0.86</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val good\">13.5</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--mut);font-weight:700'>--</span>  &nbsp;Last-5 ERA: <strong>2.03</strong></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Phillies — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#ffca28\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#ffca28\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Phillies</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">58.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Pirates</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">43.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Citizens Bank Park</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.030</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"><span style=\"font-size:11px;color:var(--mut)\">4 books</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +5.4%: market prices Phillies at 57.6%, model says 63.0%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Z. Wheeler FIP 1.90 vs opp FIP 4.80 — 2.90 FIP edge (defense-independent)</div></div>\n</div></div>", "Royals_Rays_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #ffa726\"><div><div class=\"modal-title\">Royals <span style=\"color:#ffa726\">+116</span> <span style=\"font-size:12px;color:var(--mut)\">vs Rays</span></div><div class=\"modal-sub\">M. Wacha (RHP) vs Z. Eflin (RHP)  |  LEAN 0.25u  |  Edge +3.0%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#ffa726\">49.3%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">46.3%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#ffa726\">+3.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#ffa726;font-size:12px\">LEAN</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">0.25u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+116</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">M. Wacha (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val warn\">1.33</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val warn\">7.2</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--mut);font-weight:700'>--</span>  &nbsp;Last-5 ERA: <strong>4.50</strong></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Royals — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#ffa726\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#ffa726\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Royals</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">47.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Rays</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">56.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Kauffman Stadium</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">0.980</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"><span style=\"font-size:11px;color:var(--mut)\">4 books</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +3.0%: market prices Royals at 46.3%, model says 49.3%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Underdog value at +116 — only needs 46% win rate to be +EV long-term</div></div>\n</div></div>", "Guardians_Rangers_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #ffa726\"><div><div class=\"modal-title\">Guardians <span style=\"color:#ffa726\">-112</span> <span style=\"font-size:12px;color:var(--mut)\">vs Rangers</span></div><div class=\"modal-sub\">J. Cantillo (RHP) vs P. Tolle (RHP)  |  LEAN 0.25u  |  Edge +2.6%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#ffa726\">55.5%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">52.8%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#ffa726\">+2.6%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#ffa726;font-size:12px\">LEAN</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">0.25u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">-112</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">J. Cantillo (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val warn\">3.87</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">3.87</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">3.87</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val warn\">1.35</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val warn\">8.5</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--mut);font-weight:700'>--</span>  &nbsp;Last-5 ERA: <strong>3.87</strong></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Guardians — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#ffa726\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#ffa726\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Guardians</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">51.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Rangers</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">50.0%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Progressive Field</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">0.960</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"><span style=\"font-size:11px;color:var(--mut)\">4 books</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +2.6%: market prices Guardians at 52.8%, model says 55.5%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">J. Cantillo FIP 3.87 vs opp FIP 4.70 — 0.83 FIP edge (defense-independent)</div></div>\n</div></div>"};
-function switchTab(id, btn) {{
-  document.querySelectorAll('.tab-panel').forEach(function(p) {{ p.classList.remove('active'); }});
-  document.querySelectorAll('.tab-btn').forEach(function(b) {{ b.classList.remove('active'); }});
+<div class="modal-overlay" id="modalOverlay" onclick="overlayClick(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+<script>
+var MODAL_DATA = {"Kansas_City_Royals_Tampa_Bay_Rays_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Kansas City Royals <span style=\"color:#00e676\">+125</span> <span style=\"font-size:12px;color:var(--mut)\">vs Tampa Bay Rays</span></div><div class=\"modal-sub\">Seth Lugo (RHP) vs Shane McClanahan (RHP)  |  HIGH 1.0u  |  Edge +15.0%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">59.4%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">44.4%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+15.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+125</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Seth Lugo (RHP) — Pitching Stats (16 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val warn\">4.18</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val bad\">1.37</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val bad\">6.9</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--red);font-weight:700'>DECLINING ▼</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Kansas City Royals — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Kansas City Royals</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">40.7%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Tampa Bay Rays</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">59.8%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Kauffman Stadium</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">0.980</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +15.0%: market prices Kansas City Royals at 44.4%, model says 59.4%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Underdog value at +125 — only needs 44% win rate to be +EV long-term</div></div>\n</div></div>", "Colorado_Rockies_Miami_Marlins_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Colorado Rockies <span style=\"color:#00e676\">+125</span> <span style=\"font-size:12px;color:var(--mut)\">vs Miami Marlins</span></div><div class=\"modal-sub\">Kyle Freeland (RHP) vs Max Meyer (RHP)  |  HIGH 1.0u  |  Edge +18.3%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">62.7%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">44.4%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+18.3%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+125</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Kyle Freeland (RHP) — Pitching Stats (14 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val bad\">7.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val bad\">1.61</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val warn\">7.6</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  \n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Colorado Rockies — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Colorado Rockies</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">38.4%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Miami Marlins</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">53.5%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Coors Field</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.380</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +18.3%: market prices Colorado Rockies at 44.4%, model says 62.7%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Underdog value at +125 — only needs 44% win rate to be +EV long-term</div></div>\n</div></div>", "Arizona_Diamondbacks_San_Francisco_Giants_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #ffa726\"><div><div class=\"modal-title\">Arizona Diamondbacks <span style=\"color:#ffa726\">-131</span> <span style=\"font-size:12px;color:var(--mut)\">vs San Francisco Giants</span></div><div class=\"modal-sub\">Zac Gallen (RHP) vs Trevor McDonald (RHP)  |  LEAN 0.25u  |  Edge +3.3%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#ffa726\">60.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">56.7%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#ffa726\">+3.3%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#ffa726;font-size:12px\">LEAN</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">0.25u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">-131</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Zac Gallen (RHP) — Pitching Stats (17 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val bad\">6.15</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val bad\">1.58</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val bad\">5.4</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--red);font-weight:700'>DECLINING ▼</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Arizona Diamondbacks — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#ffa726\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#ffa726\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Arizona Diamondbacks</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">50.6%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">San Francisco Giants</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">41.2%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Chase Field</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.020</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +3.3%: market prices Arizona Diamondbacks at 56.7%, model says 60.0%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Favorite at -131 with positive model edge — market underpricing Arizona Diamondbacks</div></div>\n</div></div>", "Athletics_Los_Angeles_Dodgers_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Athletics <span style=\"color:#00e676\">+141</span> <span style=\"font-size:12px;color:var(--mut)\">vs Los Angeles Dodgers</span></div><div class=\"modal-sub\">J.T. Ginn (RHP) vs TBD (RHP)  |  HIGH 1.0u  |  Edge +16.1%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">57.6%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">41.5%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+16.1%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+141</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">J.T. Ginn (RHP) — Pitching Stats (15 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val good\">3.15</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val warn\">1.22</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val warn\">7.9</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--grn);font-weight:700'>IMPROVING ▲</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Athletics — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Athletics</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">46.5%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Los Angeles Dodgers</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">65.1%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Sutter Health Park</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">0.950</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +16.1%: market prices Athletics at 41.5%, model says 57.6%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">J.T. Ginn ERA 3.15 vs opp 4.50 — 1.35 ERA advantage in 15 GS</div></div>\n</div></div>"};
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
   document.getElementById('tab-' + id).classList.add('active');
   btn.classList.add('active');
-}}
-function openModal(id) {{
+  if (id === 'results' && window.__bankrollChart) {
+    setTimeout(function(){ window.__bankrollChart.resize(); }, 30);
+  }
+}
+function openModal(id) {
   var html = MODAL_DATA[id];
   if (!html) return;
   document.getElementById('modalContent').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-}}
-function closeModal(e) {{
+}
+function closeModal(e) {
   if (e) e.stopPropagation();
   document.getElementById('modalOverlay').classList.remove('open');
   document.body.style.overflow = '';
-}}
-function overlayClick(e) {{
+}
+function overlayClick(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
-}}
-document.addEventListener('keydown', function(e) {{
+}
+document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeModal();
-}});
+});
 </script>
-<div class="footer">MLB Betting Model v3 &nbsp;|&nbsp; bitskyb@gmail.com &nbsp;|&nbsp; Not financial advice.</div></body></html>
+<div class="footer">MLB Betting Model v3 &nbsp;|&nbsp; bitskyb@gmail.com &nbsp;|&nbsp; Not financial advice.</div>
+</body>
+</html>
