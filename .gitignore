@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+data/mlb.db
+data/mlb.db.bak
+data/mlb_recovered.db
+joblib_stub/
+*.pkl
+*.log
+
+# Broken FUSE symlink
+data/data
+*.db.bak

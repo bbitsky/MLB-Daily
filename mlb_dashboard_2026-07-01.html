@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MLB Model -- 2026-07-01</title>
+<style>
+:root{--bg:#0a0e1a;--sur:#111827;--sur2:#1a2235;--bdr:#1e2d45;--txt:#e2e8f0;--mut:#64748b;
+--grn:#00e676;--yel:#ffca28;--red:#ef5350;--blu:#42a5f5;--orn:#ffa726;--pur:#ce93d8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;}
+.hdr{background:linear-gradient(135deg,#0d1b2a,#1a2235);border-bottom:1px solid var(--bdr);
+  padding:18px 28px;display:flex;align-items:center;justify-content:space-between;}
+.hdr-title{font-size:20px;font-weight:700;color:#fff;}
+.hdr-title span{color:var(--grn);}
+.hdr-date{color:var(--mut);font-size:13px;margin-top:3px;}
+.stats-bar{display:flex;gap:20px;padding:14px 28px;background:var(--sur);
+  border-bottom:1px solid var(--bdr);flex-wrap:wrap;}
+.sc{display:flex;flex-direction:column;}
+.sl{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;}
+.sv{font-size:19px;font-weight:700;margin-top:2px;}
+.sv.pos{color:var(--grn);} .sv.neg{color:var(--red);}
+.sdiv{width:1px;background:var(--bdr);margin:0 4px;}
+/* ── Tab nav ── */
+.tab-nav{display:flex;gap:2px;padding:0 20px;background:var(--sur);
+  border-bottom:1px solid var(--bdr);flex-wrap:wrap;}
+.tab-btn{padding:11px 18px;border:none;background:none;color:var(--mut);font-size:13px;
+  font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:.15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--txt);}
+.tab-btn.active{color:var(--blu);border-bottom-color:var(--blu);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+.main{max-width:1380px;margin:0 auto;padding:24px 20px;}
+.sec-title{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--mut);
+  margin-bottom:14px;border-bottom:1px solid var(--bdr);padding-bottom:7px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(500px,1fr));
+  gap:18px;margin-bottom:36px;}
+.card{background:var(--sur);border:1px solid var(--bdr);border-top:3px solid var(--cc,#42a5f5);
+  border-radius:8px;overflow:hidden;cursor:pointer;}
+.card:hover{transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,.4);transition:.15s;}
+.chdr{padding:12px 16px 9px;border-bottom:1px solid var(--bdr);}
+.mu{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.pt{font-size:16px;font-weight:700;color:#fff;}
+.vs{color:var(--mut);font-size:13px;}
+.ot{font-size:14px;color:#94a3b8;}
+.oub{background:#1e3a5f;color:var(--blu);font-size:11px;padding:2px 6px;
+  border-radius:4px;font-weight:600;}
+.cmeta{margin-top:4px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.sp{font-size:11px;color:var(--mut);}
+/* ── Tooltip system ── */
+.tip-wrap{position:relative;display:inline-flex;align-items:center;gap:3px;}
+.tip-icon{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;
+  border-radius:50%;background:var(--bdr);color:var(--mut);font-size:9px;cursor:help;flex-shrink:0;}
+.tip-box{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:#1e2d45;border:1px solid var(--bdr);border-radius:6px;padding:7px 10px;
+  font-size:11px;color:var(--txt);white-space:normal;z-index:200;min-width:160px;max-width:220px;
+  line-height:1.4;pointer-events:none;box-shadow:0 4px 16px rgba(0,0,0,.5);}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:#1e2d45;}
+.tip-wrap:hover .tip-box{display:block;}
+/* ── Ump grade chips ── */
+.ump-chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;
+  padding:2px 7px;border-radius:10px;letter-spacing:.3px;cursor:default;}
+.ua{background:#00e67622;color:var(--grn);border:1px solid var(--grn);}
+.ub{background:#42a5f522;color:var(--blu);border:1px solid var(--blu);}
+.uc{background:#ffa72622;color:var(--orn);border:1px solid var(--orn);}
+.ud{background:#ef535022;color:var(--red);border:1px solid var(--red);}
+.pline{padding:9px 16px;display:flex;align-items:center;gap:10px;
+  background:var(--sur2);border-bottom:1px solid var(--bdr);}
+.pbadge{display:flex;align-items:center;gap:7px;padding:5px 10px;border-radius:5px;}
+.plbl{font-size:10px;text-transform:uppercase;color:var(--mut);}
+.ptn{font-weight:700;font-size:13px;}
+.pml{font-weight:800;font-size:15px;}
+.cbadge{font-weight:700;font-size:12px;letter-spacing:.5px;}
+.ubadge{margin-left:auto;background:#1e3a5f;color:var(--blu);font-size:12px;
+  font-weight:700;padding:3px 9px;border-radius:4px;}
+.probs{padding:10px 16px;border-bottom:1px solid var(--bdr);}
+.prow{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
+.plabel{font-size:11px;color:var(--mut);width:85px;flex-shrink:0;}
+.pbwrap{flex:1;height:5px;background:var(--bdr);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;}
+.pb.m{background:var(--grn);}
+.pb.k{background:var(--blu);opacity:.6;}
+.pval{font-size:11px;font-weight:600;width:36px;text-align:right;}
+.erow{display:flex;gap:8px;align-items:center;margin-top:3px;}
+.elbl{font-size:11px;color:var(--mut);width:85px;}
+.eval{font-weight:700;font-size:13px;}
+.reasons{display:grid;grid-template-columns:1fr 1fr;}
+.rcol{padding:12px 16px;}
+.rcol:first-child{border-right:1px solid var(--bdr);}
+.rtitle{font-size:11px;text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:8px;font-weight:700;}
+.rtitle.pro{color:var(--grn);} .rtitle.con{color:var(--red);}
+.rlist{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.rlist li{font-size:11px;color:#94a3b8;line-height:1.4;display:flex;gap:5px;}
+.bul{flex-shrink:0;font-weight:800;}
+.bul.p{color:var(--grn);} .bul.c{color:var(--red);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:8px 10px;color:var(--mut);font-weight:600;
+  font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bdr);}
+td{padding:8px 10px;border-bottom:1px solid #131c2e;}
+tr:hover td{background:var(--sur2);}
+.pos{color:var(--grn);font-weight:600;} .neg{color:var(--red);font-weight:600;}
+.tr-total td{border-top:2px solid var(--bdr);font-weight:700;}
+.no-picks{text-align:center;padding:36px;color:var(--mut);font-size:14px;}
+.footer{text-align:center;padding:16px;color:var(--mut);font-size:11px;
+  border-top:1px solid var(--bdr);margin-top:16px;}
+.click-hint{font-size:10px;color:var(--mut);text-align:right;padding:4px 12px 6px;
+  opacity:.6;letter-spacing:.3px;}
+/* ── Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:1000;backdrop-filter:blur(3px);overflow-y:auto;}
+.modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding:32px 16px;}
+.modal{background:var(--sur);border:1px solid var(--bdr);border-radius:12px;
+  width:100%;max-width:860px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.6);}
+.modal-hdr{padding:16px 20px;border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;
+  background:linear-gradient(135deg,#0d1b2a,#1a2235);}
+.modal-title{font-size:16px;font-weight:700;color:#fff;}
+.modal-sub{font-size:12px;color:var(--mut);margin-top:3px;}
+.modal-close{background:none;border:none;color:var(--mut);font-size:22px;
+  cursor:pointer;padding:4px 8px;border-radius:4px;line-height:1;}
+.modal-close:hover{color:#fff;background:var(--sur2);}
+.modal-body{padding:0;}
+.modal-section{padding:14px 20px;border-bottom:1px solid var(--bdr);}
+.modal-section:last-child{border-bottom:none;}
+.msec-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--mut);margin-bottom:10px;font-weight:700;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.stat-box{background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;padding:8px 10px;}
+.stat-lbl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;}
+.stat-val{font-size:15px;font-weight:700;margin-top:2px;}
+.stat-val.good{color:var(--grn);} .stat-val.warn{color:var(--yel);} .stat-val.bad{color:var(--red);}
+.starts-table{width:100%;font-size:11px;border-collapse:collapse;}
+.starts-table th{color:var(--mut);padding:4px 8px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bdr);}
+.starts-table td{padding:5px 8px;border-bottom:1px solid #131c2e;}
+.qs-badge{background:#1e3a5f;color:var(--blu);font-size:10px;
+  padding:1px 5px;border-radius:3px;font-weight:700;}
+.split-row{display:flex;gap:12px;flex-wrap:wrap;}
+.split-item{background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;
+  padding:7px 12px;min-width:110px;}
+.split-lbl{font-size:10px;color:var(--mut);text-transform:uppercase;}
+.split-val{font-size:13px;font-weight:700;margin-top:2px;}
+.streak-badge{display:inline-block;padding:3px 10px;border-radius:12px;
+  font-size:12px;font-weight:700;letter-spacing:.3px;}
+.streak-w{background:#00e67622;color:var(--grn);border:1px solid var(--grn);}
+.streak-l{background:#ef535022;color:var(--red);border:1px solid var(--red);}
+.streak-n{background:var(--sur2);color:var(--mut);border:1px solid var(--bdr);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.two-col{grid-template-columns:1fr;}}
+/* ── Rundown tab ── */
+.rd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:14px;margin-bottom:28px;}
+.rd-card{background:var(--sur);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;}
+.rd-hdr{padding:10px 14px;background:var(--sur2);border-bottom:1px solid var(--bdr);
+  display:flex;align-items:center;justify-content:space-between;}
+.rd-hdr-left{font-size:13px;font-weight:700;color:#fff;}
+.rd-hdr-right{font-size:11px;color:var(--mut);}
+.rd-body{padding:10px 14px;}
+.psr{display:flex;align-items:center;justify-content:space-between;
+  padding:6px 0;border-bottom:1px solid var(--bdr);}
+.psr:last-child{border-bottom:none;}
+.psr-teams{display:flex;flex-direction:column;gap:2px;}
+.psr-name{font-size:12px;font-weight:600;color:var(--txt);}
+.psr-info{font-size:10px;color:var(--mut);}
+.psr-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;}
+/* ── Bettor News tab ── */
+.news-item{padding:12px 0;border-bottom:1px solid var(--bdr);}
+.news-item:last-child{border-bottom:none;}
+.news-tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;
+  text-transform:uppercase;letter-spacing:.5px;margin-right:6px;vertical-align:middle;}
+.nt-injury{background:#ef535033;color:var(--red);}
+.nt-line{background:#42a5f533;color:var(--blu);}
+.nt-weather{background:#ffa72633;color:var(--orn);}
+.nt-sharp{background:#ce93d833;color:var(--pur);}
+.nt-model{background:#00e67633;color:var(--grn);}
+.news-hl{font-size:13px;font-weight:600;color:var(--txt);margin-bottom:3px;}
+.news-meta{font-size:11px;color:var(--mut);}
+/* ── Social Trends tab ── */
+.trend-item{display:flex;align-items:flex-start;gap:14px;padding:12px 0;
+  border-bottom:1px solid var(--bdr);}
+.trend-item:last-child{border-bottom:none;}
+.trend-rank{font-size:22px;font-weight:800;color:var(--bdr);width:28px;
+  flex-shrink:0;text-align:center;margin-top:1px;}
+.trend-body{flex:1;}
+.trend-topic{font-size:13px;font-weight:600;color:var(--txt);}
+.trend-desc{font-size:11px;color:var(--mut);margin-top:3px;line-height:1.4;}
+.heat{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;vertical-align:middle;}
+.heat-hot{background:#ef535033;color:var(--red);}
+.heat-warm{background:#ffa72633;color:var(--orn);}
+.heat-cool{background:#42a5f533;color:var(--blu);}
+.si-tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;
+  text-transform:uppercase;letter-spacing:.5px;margin-right:7px;vertical-align:middle;}
+.si-injury{background:#ef535033;color:var(--red);}
+.si-weather{background:#ffa72633;color:var(--orn);}
+.si-trade{background:#42a5f533;color:var(--blu);}
+.si-rumor{background:#ce93d833;color:var(--pur);}
+.si-bullpen{background:#00e67633;color:var(--grn);}
+/* ── Parlays tab ── */
+.parlay-card{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.parlay-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.parlay-title{font-size:14px;font-weight:700;color:var(--txt);}
+.parlay-type{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#42a5f533;color:var(--blu);}
+.parlay-leg{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #0e1623;}
+.parlay-leg:last-child{border-bottom:none;}
+.parlay-conv{font-size:9px;font-weight:700;padding:2px 5px;border-radius:3px;text-transform:uppercase;}
+.parlay-team{font-size:13px;font-weight:600;color:var(--txt);flex:1;}
+.parlay-ml{font-size:12px;color:var(--mut);}
+.parlay-edge{font-size:11px;font-weight:700;}
+.parlay-footer{display:flex;gap:20px;margin-top:12px;padding-top:10px;border-top:1px solid var(--bdr);}
+.parlay-stat{display:flex;flex-direction:column;}
+.parlay-stat-lbl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;}
+.parlay-stat-val{font-size:18px;font-weight:800;margin-top:2px;}
+/* ── Modal: ump detail + bettor intel ── */
+.intel-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;}
+.intel-item:last-child{margin-bottom:0;}
+.intel-dot{width:6px;height:6px;border-radius:50%;background:var(--pur);
+  flex-shrink:0;margin-top:5px;}
+.intel-text{font-size:12px;color:#94a3b8;line-height:1.5;}
+.ump-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:8px;margin-top:8px;}
+.ump-box{background:var(--sur2);border:1px solid var(--bdr);border-radius:6px;padding:7px 10px;}
+.ump-lbl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;}
+.ump-val{font-size:14px;font-weight:700;margin-top:2px;}
+/* ── Umpire scorecard tab ── */
+.ump-table-wrap{overflow-x:auto;}
+.ump-grade-cell{font-weight:800;font-size:14px;}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div>
+    <div class="hdr-title">MLB Betting Model <span>v3</span></div>
+    <div class="hdr-date">Generated July 1, 2026  9:48 PM</div>
+  </div>
+  <div style="text-align:right">
+    <div style="font-size:13px;color:#94a3b8">4 plays &nbsp;|&nbsp; 4.00u in action</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:2px">XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26: 1170-808 (59.2% win rate)</div>
+  </div>
+</div>
+<div class="stats-bar">
+  <div class="sc"><span class="sl">Backtest W-L</span><span class="sv">1170-808</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Win Rate</span><span class="sv pos">59.2%</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">ROI</span><span class="sv pos">+13.2%</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Profit</span><span class="sv pos">+260u</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Games Analyzed</span><span class="sv">1,978</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Today Plays</span><span class="sv" style="color:var(--blu)">4</span></div>
+  <div class="sdiv"></div>
+  <div class="sc"><span class="sl">Units Today</span><span class="sv" style="color:var(--blu)">4.00u</span></div>
+</div>
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('picks',this)">Today's Picks</button>
+  <button class="tab-btn" onclick="switchTab('rundown',this)">Today's Rundown</button>
+  <button class="tab-btn" onclick="switchTab('results',this)">Results</button>
+  <button class="tab-btn" onclick="switchTab('weekly',this)">Weekly</button>
+  <button class="tab-btn" onclick="switchTab('mybets',this)">My Bets</button>
+  <button class="tab-btn" onclick="switchTab('parlays',this)">Parlays</button>
+  <button class="tab-btn" onclick="switchTab('news',this)">Bettor News</button>
+  <button class="tab-btn" onclick="switchTab('trends',this)">Social Trends</button>
+  <button class="tab-btn" onclick="switchTab('umps',this)">Umpires</button>
+</div>
+<div id="tab-picks" class="tab-panel active">
+<div class="main">
+  <div class="sec-title">Today's Picks — 2026-07-01</div>
+  <div class="grid">
+<div class="card" style="--cc:#00e676" onclick="openModal('Houston_Astros_Minnesota_Twins_home')" data-id="Houston_Astros_Minnesota_Twins_home">
+  <div class="chdr">
+    <div class="mu">
+      <span class="pt">Houston Astros</span>
+      <span class="vs">vs</span>
+      <span class="ot">Minnesota Twins</span>
+      <span class="oub">O/U 13.5</span>
+    </div>
+    <div class="cmeta">
+      <span class="sp">Tatsuya Imai vs Taj Bradley</span>
+      <span class="sp">Daikin Park (PF:0.97)</span>
+      
+    </div>
+  </div>
+  <div class="pline">
+    <div class="pbadge" style="background:#00e67620;border:1px solid #00e676">
+      <span class="plbl">PICK</span>
+      <span class="ptn">Houston Astros</span>
+      <span class="pml">+517</span>
+    </div>
+    <span class="cbadge" style="color:#00e676">HIGH</span>
+    <span class="ubadge">1.0u</span>
+    <label class="betsel" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;color:var(--mut);cursor:pointer">
+      <input type="checkbox" class="betbox" data-pid="2026-07-01|Houston Astros|517" onchange="toggleBet(this)" style="cursor:pointer;accent-color:var(--blu)"> I bet this
+    </label>
+  </div>
+  <div class="probs">
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Model
+          <span class="tip-icon">?</span>
+          <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb m" style="width:58.3%"></div></div>
+      <span class="pval">58.3%</span>
+    </div>
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Market Impl
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb k" style="width:16.2%"></div></div>
+      <span class="pval">16.2%</span>
+    </div>
+    <div class="erow">
+      <span class="elbl">
+        <span class="tip-wrap">Edge
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
+        </span>
+      </span>
+      <span class="eval" style="color:#00e676">+42.1%</span>
+    </div>
+  </div>
+  <div class="reasons">
+    <div class="rcol">
+      <div class="rtitle pro">3 Reasons to Bet</div>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +42.1%: market prices Houston Astros at 16.2%, model says 58.3%</li><li><span class="bul p">+</span>Tatsuya Imai K/9 11.2 — elite strikeout rate, hard to score against</li><li><span class="bul p">+</span>Tatsuya Imai trending UP — last-5-start ERA 7.38 vs season 6.14; improving form</li></ul>
+    </div>
+    <div class="rcol">
+      <div class="rtitle con">3 Reasons Against</div>
+      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Minnesota Twins road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+    </div>
+  </div>
+  <div class="click-hint">click for full analysis</div>
+</div>
+
+<div class="card" style="--cc:#00e676" onclick="openModal('Arizona_Diamondbacks_San_Francisco_Giants_home')" data-id="Arizona_Diamondbacks_San_Francisco_Giants_home">
+  <div class="chdr">
+    <div class="mu">
+      <span class="pt">Arizona Diamondbacks</span>
+      <span class="vs">vs</span>
+      <span class="ot">San Francisco Giants</span>
+      <span class="oub">O/U 8.5</span>
+    </div>
+    <div class="cmeta">
+      <span class="sp">Zac Gallen vs Trevor McDonald</span>
+      <span class="sp">Chase Field (PF:1.02)</span>
+      
+    </div>
+  </div>
+  <div class="pline">
+    <div class="pbadge" style="background:#00e67620;border:1px solid #00e676">
+      <span class="plbl">PICK</span>
+      <span class="ptn">Arizona Diamondbacks</span>
+      <span class="pml">+432</span>
+    </div>
+    <span class="cbadge" style="color:#00e676">HIGH</span>
+    <span class="ubadge">1.0u</span>
+    <label class="betsel" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;color:var(--mut);cursor:pointer">
+      <input type="checkbox" class="betbox" data-pid="2026-07-01|Arizona Diamondbacks|432" onchange="toggleBet(this)" style="cursor:pointer;accent-color:var(--blu)"> I bet this
+    </label>
+  </div>
+  <div class="probs">
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Model
+          <span class="tip-icon">?</span>
+          <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb m" style="width:60.0%"></div></div>
+      <span class="pval">60.0%</span>
+    </div>
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Market Impl
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb k" style="width:18.8%"></div></div>
+      <span class="pval">18.8%</span>
+    </div>
+    <div class="erow">
+      <span class="elbl">
+        <span class="tip-wrap">Edge
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
+        </span>
+      </span>
+      <span class="eval" style="color:#00e676">+41.3%</span>
+    </div>
+  </div>
+  <div class="reasons">
+    <div class="rcol">
+      <div class="rtitle pro">3 Reasons to Bet</div>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +41.3%: market prices Arizona Diamondbacks at 18.8%, model says 60.0%</li><li><span class="bul p">+</span>Underdog value at +432 — only needs 19% win rate to be +EV long-term</li><li><span class="bul p">+</span>Arizona Diamondbacks win% 50.6% vs San Francisco Giants 41.2% — 9pt stronger record this season</li></ul>
+    </div>
+    <div class="rcol">
+      <div class="rtitle con">3 Reasons Against</div>
+      <ul class="rlist"><li><span class="bul c">-</span>Zac Gallen trending DOWN — last-5 ERA 8.54 worse than season avg 6.18; recent form a concern</li><li><span class="bul c">-</span>San Francisco Giants road-game factor — away teams sometimes play with extra motivation</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+    </div>
+  </div>
+  <div class="click-hint">click for full analysis</div>
+</div>
+
+<div class="card" style="--cc:#00e676" onclick="openModal('Cincinnati_Reds_Milwaukee_Brewers_away')" data-id="Cincinnati_Reds_Milwaukee_Brewers_away">
+  <div class="chdr">
+    <div class="mu">
+      <span class="pt">Cincinnati Reds</span>
+      <span class="vs">vs</span>
+      <span class="ot">Milwaukee Brewers</span>
+      <span class="oub">O/U 6.5</span>
+    </div>
+    <div class="cmeta">
+      <span class="sp">Andrew Abbott vs Shane Drohan</span>
+      <span class="sp">American Family Field (PF:1.01)</span>
+      
+    </div>
+  </div>
+  <div class="pline">
+    <div class="pbadge" style="background:#00e67620;border:1px solid #00e676">
+      <span class="plbl">PICK</span>
+      <span class="ptn">Cincinnati Reds</span>
+      <span class="pml">+1200</span>
+    </div>
+    <span class="cbadge" style="color:#00e676">HIGH</span>
+    <span class="ubadge">1.0u</span>
+    <label class="betsel" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;color:var(--mut);cursor:pointer">
+      <input type="checkbox" class="betbox" data-pid="2026-07-01|Cincinnati Reds|1200" onchange="toggleBet(this)" style="cursor:pointer;accent-color:var(--blu)"> I bet this
+    </label>
+  </div>
+  <div class="probs">
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Model
+          <span class="tip-icon">?</span>
+          <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb m" style="width:39.7%"></div></div>
+      <span class="pval">39.7%</span>
+    </div>
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Market Impl
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb k" style="width:7.7%"></div></div>
+      <span class="pval">7.7%</span>
+    </div>
+    <div class="erow">
+      <span class="elbl">
+        <span class="tip-wrap">Edge
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
+        </span>
+      </span>
+      <span class="eval" style="color:#00e676">+32.0%</span>
+    </div>
+  </div>
+  <div class="reasons">
+    <div class="rcol">
+      <div class="rtitle pro">3 Reasons to Bet</div>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +32.0%: market prices Cincinnati Reds at 7.7%, model says 39.7%</li><li><span class="bul p">+</span>Underdog value at +1200 — only needs 8% win rate to be +EV long-term</li><li><span class="bul p">+</span>Cincinnati Reds well-rested (5d off) — fresh bullpen arms available today</li></ul>
+    </div>
+    <div class="rcol">
+      <div class="rtitle con">3 Reasons Against</div>
+      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Milwaukee Brewers home field advantage — road teams win ~47% of MLB games historically</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+    </div>
+  </div>
+  <div class="click-hint">click for full analysis</div>
+</div>
+
+<div class="card" style="--cc:#00e676" onclick="openModal('Miami_Marlins_Colorado_Rockies_away')" data-id="Miami_Marlins_Colorado_Rockies_away">
+  <div class="chdr">
+    <div class="mu">
+      <span class="pt">Miami Marlins</span>
+      <span class="vs">vs</span>
+      <span class="ot">Colorado Rockies</span>
+      <span class="oub">O/U 9.5</span>
+    </div>
+    <div class="cmeta">
+      <span class="sp">Max Meyer vs Kyle Freeland</span>
+      <span class="sp">Coors Field (PF:1.38)</span>
+      
+    </div>
+  </div>
+  <div class="pline">
+    <div class="pbadge" style="background:#00e67620;border:1px solid #00e676">
+      <span class="plbl">PICK</span>
+      <span class="ptn">Miami Marlins</span>
+      <span class="pml">+1354</span>
+    </div>
+    <span class="cbadge" style="color:#00e676">HIGH</span>
+    <span class="ubadge">1.0u</span>
+    <label class="betsel" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;color:var(--mut);cursor:pointer">
+      <input type="checkbox" class="betbox" data-pid="2026-07-01|Miami Marlins|1354" onchange="toggleBet(this)" style="cursor:pointer;accent-color:var(--blu)"> I bet this
+    </label>
+  </div>
+  <div class="probs">
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Model
+          <span class="tip-icon">?</span>
+          <span class="tip-box">XGBoost walk-forward win probability. Values above 52% indicate the model favors this side.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb m" style="width:37.3%"></div></div>
+      <span class="pval">37.3%</span>
+    </div>
+    <div class="prow">
+      <span class="plabel">
+        <span class="tip-wrap">Market Impl
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Implied win probability derived from the moneyline, with vig removed. This is what oddsmakers think.</span>
+        </span>
+      </span>
+      <div class="pbwrap"><div class="pb k" style="width:6.9%"></div></div>
+      <span class="pval">6.9%</span>
+    </div>
+    <div class="erow">
+      <span class="elbl">
+        <span class="tip-wrap">Edge
+          <span class="tip-icon">?</span>
+          <span class="tip-box">Model prob minus market implied prob. Positive edge = model thinks this team is underpriced by the market.</span>
+        </span>
+      </span>
+      <span class="eval" style="color:#00e676">+30.4%</span>
+    </div>
+  </div>
+  <div class="reasons">
+    <div class="rcol">
+      <div class="rtitle pro">3 Reasons to Bet</div>
+      <ul class="rlist"><li><span class="bul p">+</span>Model edge +30.4%: market prices Miami Marlins at 6.9%, model says 37.3%</li><li><span class="bul p">+</span>Max Meyer ERA 2.53 vs opp 7.25 — 4.72 ERA advantage in 18 GS</li><li><span class="bul p">+</span>Max Meyer trending UP — last-5-start ERA 1.86 vs season 2.53; improving form</li></ul>
+    </div>
+    <div class="rcol">
+      <div class="rtitle con">3 Reasons Against</div>
+      <ul class="rlist"><li><span class="bul c">-</span>MLB high-variance: even strong edges lose 4-in-10 — 1u max per game</li><li><span class="bul c">-</span>Colorado Rockies home field advantage — road teams win ~47% of MLB games historically</li><li><span class="bul c">-</span>MLB high-variance: even +8% edges lose 4-in-10 — never exceed 1u per game</li></ul>
+    </div>
+  </div>
+  <div class="click-hint">click for full analysis</div>
+</div></div>
+  <div style="margin-bottom:32px">
+    <div class="sec-title">Full Slate — All Games</div>
+    <table>
+      <thead><tr><th>Away</th><th>ML</th><th>Away Pick</th>
+        <th>Home</th><th>ML</th><th>Home Pick</th><th>O/U</th></tr></thead>
+      <tbody><tr><td>Cincinnati Reds</td><td>+1200</td><td><span style="color:#00e676">HIGH 1.0u (+32.0%)</span></td><td>Milwaukee Brewers</td><td>-5000</td><td><span style="color:#546e7a">—</span></td><td>6.5</td></tr><tr><td>Minnesota Twins</td><td>-895</td><td><span style="color:#546e7a">—</span></td><td>Houston Astros</td><td>+517</td><td><span style="color:#00e676">HIGH 1.0u (+42.1%)</span></td><td>13.5</td></tr><tr><td>Miami Marlins</td><td>+1354</td><td><span style="color:#00e676">HIGH 1.0u (+30.4%)</span></td><td>Colorado Rockies</td><td>-3377</td><td><span style="color:#546e7a">—</span></td><td>9.5</td></tr><tr><td>San Francisco Giants</td><td>-707</td><td><span style="color:#546e7a">—</span></td><td>Arizona Diamondbacks</td><td>+432</td><td><span style="color:#00e676">HIGH 1.0u (+41.3%)</span></td><td>8.5</td></tr><tr><td>Los Angeles Dodgers</td><td>+129</td><td><span style="color:#546e7a">—</span></td><td>Athletics</td><td>-170</td><td><span style="color:#546e7a">—</span></td><td>9.5</td></tr></tbody>
+    </table>
+  </div>
+  <div>
+    <div class="sec-title">XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26 — By Season</div>
+    <table>
+      <thead><tr><th>Season</th><th>Bets</th><th>W-L</th><th>Win%</th><th>ROI</th><th>Profit</th></tr></thead>
+      <tbody><tr><td>2022</td><td>521</td><td>306-215</td><td class='pos'>58.7%</td><td class='pos'>+12.1%</td><td class='pos'>+63u</td></tr><tr><td>2023</td><td>466</td><td>284-182</td><td class='pos'>60.9%</td><td class='pos'>+16.3%</td><td class='pos'>+76u</td></tr><tr><td>2024</td><td>463</td><td>284-179</td><td class='pos'>61.3%</td><td class='pos'>+17.1%</td><td class='pos'>+79u</td></tr><tr><td>2025</td><td>528</td><td>296-232</td><td class='pos'>56.1%</td><td class='pos'>+7.0%</td><td class='pos'>+37u</td></tr>
+        <tr class="tr-total">
+          <td>ALL</td><td>1,978</td><td>1170-808</td>
+          <td class="pos">59.2%</td>
+          <td class="pos">+13.2%</td>
+          <td class="pos">+260u</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11px;color:var(--mut);margin-top:9px">
+      XGBoost Walk-Forward CV (AUC 0.604) — trained 2026-06-29 20:26. Flat -110 juice. 2021-2025 regular season.
+    </p>
+  </div>
+</div>
+</div>
+<div id="tab-rundown" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Today's Rundown — All 5 Games</div>
+  <div class="rd-grid">
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Cincinnati Reds @ Milwaukee Brewers</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 6.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Cincinnati Reds <span style="color:#546e7a;font-weight:400;font-size:11px">+1200</span></div>
+        <div class="psr-info">Andrew Abbott · Model: 39.7%</div>
+      </div>
+      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Milwaukee Brewers <span style="color:#546e7a;font-weight:400;font-size:11px">-5000</span></div>
+        <div class="psr-info">Shane Drohan · Model: 60.3%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">American Family Field · PF 1.01</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Minnesota Twins @ Houston Astros</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 13.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Minnesota Twins <span style="color:#546e7a;font-weight:400;font-size:11px">-895</span></div>
+        <div class="psr-info">Taj Bradley · Model: 41.7%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Houston Astros <span style="color:#546e7a;font-weight:400;font-size:11px">+517</span></div>
+        <div class="psr-info">Tatsuya Imai · Model: 58.3%</div>
+      </div>
+      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Daikin Park · PF 0.97</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Miami Marlins @ Colorado Rockies</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Miami Marlins <span style="color:#546e7a;font-weight:400;font-size:11px">+1354</span></div>
+        <div class="psr-info">Max Meyer · Model: 37.3%</div>
+      </div>
+      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Colorado Rockies <span style="color:#546e7a;font-weight:400;font-size:11px">-3377</span></div>
+        <div class="psr-info">Kyle Freeland · Model: 62.7%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Coors Field · PF 1.38</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">San Francisco Giants @ Arizona Diamondbacks</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 8.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">San Francisco Giants <span style="color:#546e7a;font-weight:400;font-size:11px">-707</span></div>
+        <div class="psr-info">Trevor McDonald · Model: 40.0%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Arizona Diamondbacks <span style="color:#546e7a;font-weight:400;font-size:11px">+432</span></div>
+        <div class="psr-info">Zac Gallen · Model: 60.0%</div>
+      </div>
+      <span class="psr-badge" style="background:#00e67622;color:#00e676;border:1px solid #00e676">HIGH</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Chase Field · PF 1.02</div>
+  </div>
+</div>
+
+<div class="rd-card">
+  <div class="rd-hdr">
+    <div class="rd-hdr-left">Los Angeles Dodgers @ Athletics</div>
+    <div style="display:flex;gap:6px;align-items:center"><span class="oub">O/U 9.5</span></div>
+  </div>
+  <div class="rd-body">
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Los Angeles Dodgers <span style="color:#546e7a;font-weight:400;font-size:11px">+129</span></div>
+        <div class="psr-info">TBD · Model: 42.4%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div class="psr">
+      <div class="psr-teams">
+        <div class="psr-name">Athletics <span style="color:#546e7a;font-weight:400;font-size:11px">-170</span></div>
+        <div class="psr-info">J.T. Ginn · Model: 57.6%</div>
+      </div>
+      <span style="font-size:10px;color:#546e7a">—</span>
+    </div>
+    <div style="font-size:10px;color:#546e7a;margin-top:6px">Sutter Health Park · PF 0.95</div>
+  </div>
+</div></div>
+</div>
+</div>
+<div id="tab-results" class="tab-panel">
+<div class="main">
+  
+  <div style="margin-bottom:32px">
+    <div class="sec-title">Yesterday — 2026-06-30 &nbsp;(<span style='color:#00e676'>Clean sweep</span>)</div>
+    <div class="stats-bar" style="border-radius:8px;margin-bottom:14px">
+      <div class="sc"><span class="sl">Record</span><span class="sv pos">4W-0L</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Units</span><span class="sv pos">+2.21u</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">P/L</span><span class="sv pos">+$55.14</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">ROI</span><span class="sv pos">+88.2%</span></div>
+    </div>
+    <table><thead><tr><th>Pick</th><th>Conv</th><th>Size</th><th>Result</th><th>P/L $</th></tr></thead>
+    <tbody><tr><td>Milwaukee Brewers -138</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$18.12</td></tr><tr><td>Detroit Tigers +124</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$15.50</td></tr><tr><td>Los Angeles Dodgers -175</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$7.15</td></tr><tr><td>Washington Nationals +115</td><td><span style='color:#aaa'>COND</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$14.37</td></tr></tbody></table>
+  </div>
+  
+  <div style="margin-bottom:32px">
+    <div class="sec-title">Bankroll Tracker — $500 Starting</div>
+    <div class="stats-bar" style="border-radius:8px;margin-bottom:18px">
+      <div class="sc"><span class="sl">Bankroll</span><span class="sv neg">$493.39</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">P/L</span><span class="sv neg">$-6.60</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">ROI</span><span class="sv neg">-1.3%</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Record</span><span class="sv">11W-9L</span></div>
+    </div>
+    <canvas id="bankrollChart" style="width:100%;max-height:220px;margin-bottom:18px"></canvas>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script>
+    (function(){
+      var ctx=document.getElementById('bankrollChart').getContext('2d');
+      var labels=["Start","2026-06-26","2026-06-27","2026-06-28","2026-06-29","2026-06-30"],values=[500.0,475.5,450.75,430.24,438.25,493.39];
+      var color=values[values.length-1]>=500.0?'#00e676':'#ef5350';
+      window.__bankrollChart = new Chart(ctx,{type:'line',data:{labels:labels,datasets:[
+        {label:'Bankroll',data:values,borderColor:color,backgroundColor:color+'22',
+         borderWidth:2,pointRadius:labels.length<30?4:2,fill:true,tension:0.3},
+        {label:'Starting',data:Array(labels.length).fill(500.0),
+         borderColor:'#546e7a',borderWidth:1,borderDash:[6,4],pointRadius:0,fill:false}
+      ]},options:{responsive:true,
+        plugins:{legend:{labels:{color:'#cfd8dc',font:{size:12}}}},
+        scales:{x:{ticks:{color:'#78909c',maxTicksLimit:10},grid:{color:'#263238'}},
+                 y:{ticks:{color:'#78909c',callback:v=>'$'+v},grid:{color:'#263238'}}}
+      }});
+    })();
+    </script>
+    <table><thead><tr><th>Date</th><th>Pick</th><th>Conv</th><th>Size</th><th>Result</th><th>P/L $</th><th>Bankroll</th></tr></thead>
+    <tbody><tr><td>2026-06-30</td><td>Washington Nationals +115</td><td><span style='color:#aaa'>COND</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$14.37</td><td class='pos'>$493.39</td></tr><tr><td>2026-06-30</td><td>Los Angeles Dodgers -175</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$7.15</td><td class='pos'>$479.02</td></tr><tr><td>2026-06-30</td><td>Detroit Tigers +124</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$15.50</td><td class='pos'>$471.87</td></tr><tr><td>2026-06-30</td><td>Milwaukee Brewers -138</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$18.12</td><td class='pos'>$456.37</td></tr><tr><td>2026-06-29</td><td>Detroit Tigers +129</td><td><span style='color:#ffa726'>LEAN</span></td><td>0.25u</td><td class='pos'>W</td><td class='pos'>+$8.08</td><td class='pos'>$438.25</td></tr><tr><td>2026-06-29</td><td>San Diego Padres +140</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$430.17</td></tr><tr><td>2026-06-29</td><td>Minnesota Twins +118</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$14.75</td><td class='pos'>$442.67</td></tr><tr><td>2026-06-29</td><td>Chicago White Sox +121</td><td><span style='color:#00e676'>HIGH</span></td><td>0.75u</td><td class='pos'>W</td><td class='pos'>+$22.68</td><td class='pos'>$427.92</td></tr><tr><td>2026-06-29</td><td>Washington Nationals +155</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$405.24</td></tr><tr><td>2026-06-28</td><td>Boston Red Sox -120</td><td><span style='color:#ffa726'>LEAN</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$10.42</td><td class='pos'>$430.24</td></tr><tr><td>2026-06-28</td><td>Houston Astros -131</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$19.07</td><td class='pos'>$419.82</td></tr><tr><td>2026-06-28</td><td>San Diego Padres +118</td><td><span style='color:#69f0ae'>MED-HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$400.75</td></tr><tr><td>2026-06-28</td><td>Atlanta Braves -162</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$425.75</td></tr><tr><td>2026-06-27</td><td>Atlanta Braves -122</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$450.75</td></tr><tr><td>2026-06-27</td><td>Boston Red Sox +102</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='pos'>W</td><td class='pos'>+$12.75</td><td class='pos'>$463.25</td></tr><tr><td>2026-06-27</td><td>Milwaukee Brewers -169</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$450.50</td></tr><tr><td>2026-06-26</td><td>New York Yankees -110</td><td><span style='color:#ffa726'>LEAN</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$475.50</td></tr><tr><td>2026-06-26</td><td>Houston Astros -102</td><td><span style='color:#ffca28'>MEDIUM</span></td><td>0.5u</td><td class='neg'>L</td><td class='neg'>$-12.50</td><td class='neg'>$488.00</td></tr><tr><td>2026-06-26</td><td>Miami Marlins +102</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='pos'>W</td><td class='pos'>+$25.50</td><td class='pos'>$500.50</td></tr><tr><td>2026-06-26</td><td>Washington Nationals +120</td><td><span style='color:#00e676'>HIGH</span></td><td>1.0u</td><td class='neg'>L</td><td class='neg'>$-25.00</td><td class='neg'>$475.00</td></tr></tbody></table>
+  </div>
+  
+  <div style="margin-bottom:32px">
+    <div class="sec-title">My Pick Record (Live)</div>
+    <div class="stats-bar" style="border-radius:8px;margin-bottom:14px">
+      <div class="sc"><span class="sl">Record</span><span class="sv">11W-9L</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Win Rate</span><span class="sv neg">55.0%</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">P/L</span><span class="sv neg">-0.26u</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">ROI</span><span class="sv neg">-1.9%</span></div>
+    </div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <div style="flex:1;min-width:240px">
+        <table><thead><tr><th>Conviction</th><th>Bets</th><th>W-L</th><th>Win%</th><th>P/L</th></tr></thead>
+        <tbody><tr><td>HIGH</td><td>7</td><td>3-4</td><td class='neg'>42.9%</td><td class='neg'>-1.35u</td></tr><tr><td>MED-HIGH</td><td>1</td><td>0-1</td><td class='neg'>0.0%</td><td class='neg'>-1.00u</td></tr><tr><td>MEDIUM</td><td>8</td><td>5-3</td><td class='pos'>62.5%</td><td class='pos'>+1.27u</td></tr><tr><td>LEAN</td><td>3</td><td>2-1</td><td class='pos'>66.7%</td><td class='pos'>+0.24u</td></tr></tbody></table>
+      </div>
+      <div style="flex:1;min-width:240px">
+        <table><thead><tr><th>Month</th><th>Bets</th><th>W-L</th><th>Win%</th><th>P/L</th></tr></thead>
+        <tbody><tr><td>2026-06</td><td>20</td><td>11-9</td><td class='neg'>55.0%</td><td class='neg'>-0.26u</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="tab-weekly" class="tab-panel">
+<div class="main">
+  
+  <div style="margin-bottom:28px">
+    <div class="sec-title">Weekly Report — last 7 days</div>
+    <div class="stats-bar" style="border-radius:8px;margin-bottom:14px">
+      <div class="sc"><span class="sl">Record</span><span class="sv neg">11W-9L</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Win Rate</span><span class="sv neg">55.0%</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">Units</span><span class="sv neg">-0.26u</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">P/L</span><span class="sv neg">$-6.61</span></div>
+      <div class="sdiv"></div>
+      <div class="sc"><span class="sl">ROI</span><span class="sv neg">-1.9%</span></div>
+    </div>
+    <table><thead><tr><th>Day</th><th>W-L</th><th>Staked</th><th>P/L (u)</th><th>P/L $</th><th>ROI</th></tr></thead>
+    <tbody><tr><td>2026-06-26</td><td>1-3</td><td>3.00u</td><td class='neg'>-0.98u</td><td class='neg'>$-24.50</td><td class='neg'>-32.7%</td></tr><tr><td>2026-06-27</td><td>1-2</td><td>2.00u</td><td class='neg'>-0.99u</td><td class='neg'>$-24.75</td><td class='neg'>-49.5%</td></tr><tr><td>2026-06-28</td><td>2-2</td><td>3.50u</td><td class='neg'>-0.82u</td><td class='neg'>$-20.51</td><td class='neg'>-23.4%</td></tr><tr><td>2026-06-29</td><td>3-2</td><td>3.00u</td><td class='pos'>+0.32u</td><td class='pos'>+$8.01</td><td class='pos'>+10.7%</td></tr><tr><td>2026-06-30</td><td>4-0</td><td>2.50u</td><td class='pos'>+2.21u</td><td class='pos'>+$55.14</td><td class='pos'>+88.2%</td></tr>
+      <tr class="tr-total"><td>7-DAY</td><td>11-9</td><td>14.00u</td>
+      <td class="neg">-0.26u</td>
+      <td class="neg">$-6.61</td>
+      <td class="neg">-1.9%</td></tr>
+    </tbody></table>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:14px">
+      <div style="flex:1;min-width:240px"><span class="sl">Best day</span><br><span class="pos" style="font-size:13px">2026-06-30 (4-0, +$55.14)</span></div>
+      <div style="flex:1;min-width:240px"><span class="sl">Worst day</span><br><span class="neg" style="font-size:13px">2026-06-27 (1-2, $-24.75)</span></div>
+    </div>
+  </div>
+</div>
+</div>
+<div id="tab-mybets" class="tab-panel">
+<div class="main">
+  <div class="sec-title">My Bets — the picks you check</div>
+  <p style="font-size:12px;color:var(--mut);margin-bottom:12px">Tick &quot;I bet this&quot; on any pick card. Selections save in your browser instantly and update here live. Use Save to write them to the database via sync_bets.py so they persist across days.</p>
+  <div style="display:flex;gap:10px;margin-bottom:16px">
+    <button onclick="saveMyBets()" style="background:var(--blu);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer">Save my bets to file</button>
+    <button onclick="clearMyBets()" style="background:none;color:var(--mut);border:1px solid var(--mut);border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer">Clear all</button>
+  </div>
+  <div id="mybets-body"></div>
+</div>
+</div>
+<div id="tab-parlays" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Parlay Builder — 2026-07-01</div>
+  <p style="font-size:12px;color:var(--mut);margin-bottom:16px">Auto-generated from today's model picks. Parlays shown in edge-descending order. Model edge = fair combined probability vs market implied probability.</p>
+  <div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Top 2-Team Parlay — Houston Astros + Arizona Diamondbacks</div><div class="parlay-type">2-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Houston Astros <span style="font-size:11px;color:var(--mut)">vs Minnesota Twins</span></span><span class="parlay-ml" style="margin-right:8px">+517</span><span class="parlay-edge" style="color:var(--grn)">+42.1%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Arizona Diamondbacks <span style="font-size:11px;color:var(--mut)">vs San Francisco Giants</span></span><span class="parlay-ml" style="margin-right:8px">+432</span><span class="parlay-edge" style="color:var(--grn)">+41.3%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+3182</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+1048.6%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">35.0%</span></div></div></div>
+<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Top 3-Team Parlay — Houston Astros + Arizona Diamondbacks + Cincinnati Reds</div><div class="parlay-type">3-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Houston Astros <span style="font-size:11px;color:var(--mut)">vs Minnesota Twins</span></span><span class="parlay-ml" style="margin-right:8px">+517</span><span class="parlay-edge" style="color:var(--grn)">+42.1%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Arizona Diamondbacks <span style="font-size:11px;color:var(--mut)">vs San Francisco Giants</span></span><span class="parlay-ml" style="margin-right:8px">+432</span><span class="parlay-edge" style="color:var(--grn)">+41.3%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Cincinnati Reds <span style="font-size:11px;color:var(--mut)">vs Milwaukee Brewers</span></span><span class="parlay-ml" style="margin-right:8px">+1200</span><span class="parlay-edge" style="color:var(--grn)">+32.0%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+9900</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+5833.5%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">13.9%</span></div></div></div>
+<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Power Parlay — Houston Astros + Arizona Diamondbacks + Cincinnati Reds + Miami Marlins</div><div class="parlay-type">4-TEAM</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Houston Astros <span style="font-size:11px;color:var(--mut)">vs Minnesota Twins</span></span><span class="parlay-ml" style="margin-right:8px">+517</span><span class="parlay-edge" style="color:var(--grn)">+42.1%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Arizona Diamondbacks <span style="font-size:11px;color:var(--mut)">vs San Francisco Giants</span></span><span class="parlay-ml" style="margin-right:8px">+432</span><span class="parlay-edge" style="color:var(--grn)">+41.3%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Cincinnati Reds <span style="font-size:11px;color:var(--mut)">vs Milwaukee Brewers</span></span><span class="parlay-ml" style="margin-right:8px">+1200</span><span class="parlay-edge" style="color:var(--grn)">+32.0%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Miami Marlins <span style="font-size:11px;color:var(--mut)">vs Colorado Rockies</span></span><span class="parlay-ml" style="margin-right:8px">+1354</span><span class="parlay-edge" style="color:var(--grn)">+30.4%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+9900</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+32065.2%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">5.2%</span></div></div></div>
+<div class="parlay-card"><div class="parlay-header"><div class="parlay-title">Value Parlay — Medium+ conviction only</div><div class="parlay-type">VALUE</div></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Houston Astros <span style="font-size:11px;color:var(--mut)">vs Minnesota Twins</span></span><span class="parlay-ml" style="margin-right:8px">+517</span><span class="parlay-edge" style="color:var(--grn)">+42.1%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Arizona Diamondbacks <span style="font-size:11px;color:var(--mut)">vs San Francisco Giants</span></span><span class="parlay-ml" style="margin-right:8px">+432</span><span class="parlay-edge" style="color:var(--grn)">+41.3%</span></div><div class="parlay-leg"><span class="parlay-conv" style="background:#00e67633;color:#00e676">HIGH</span><span class="parlay-team">Cincinnati Reds <span style="font-size:11px;color:var(--mut)">vs Milwaukee Brewers</span></span><span class="parlay-ml" style="margin-right:8px">+1200</span><span class="parlay-edge" style="color:var(--grn)">+32.0%</span></div><div class="parlay-footer"><div class="parlay-stat"><span class="parlay-stat-lbl">Parlay Odds</span><span class="parlay-stat-val" style="color:var(--blu)">+9900</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Model Edge</span><span class="parlay-stat-val" style="color:var(--grn)">+5833.5%</span></div><div class="parlay-stat"><span class="parlay-stat-lbl">Win Prob</span><span class="parlay-stat-val" style="color:var(--mut)">13.9%</span></div></div></div>
+</div>
+</div>
+<div id="tab-news" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Bettor News &amp; Market Intel — 2026-07-01</div>
+  <p style="font-size:12px;color:var(--mut);margin-bottom:12px">Line movement, sharp action, steam moves, and market observations.</p>
+  <div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Cincinnati Reds</strong> HIGH vs Milwaukee Brewers — edge +32.0% | Model edge +32.0%: market prices Cincinnati Reds at 7.7%, model says 39.7%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
+<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Houston Astros</strong> HIGH vs Minnesota Twins — edge +42.1% | Model edge +42.1%: market prices Houston Astros at 16.2%, model says 58.3%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
+<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Miami Marlins</strong> HIGH vs Colorado Rockies — edge +30.4% | Model edge +30.4%: market prices Miami Marlins at 6.9%, model says 37.3%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
+<div class="news-item"><div class="news-hl"><span class="news-tag nt-model">MODEL</span><strong style="color:#00e676">Arizona Diamondbacks</strong> HIGH vs San Francisco Giants — edge +41.3% | Model edge +41.3%: market prices Arizona Diamondbacks at 18.8%, model says 60.0%</div><div class="news-meta">Conviction: HIGH · Units: 1.0u · Model edge vs market implied</div></div>
+</div>
+</div>
+<div id="tab-trends" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Social Intel — Injuries, Weather &amp; Rumors — 2026-07-01</div>
+  <div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Cincinnati Reds @ Milwaukee Brewers<span class="heat heat-cool">📊 PITCHER</span></div><div class="trend-desc">American Family Field · PF 1.010 (Neutral park) · Andrew Abbott vs Shane Drohan · O/U 6.5</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Minnesota Twins @ Houston Astros<span class="heat heat-cool">📊 PITCHER</span></div><div class="trend-desc">Daikin Park · PF 0.970 (Pitcher-friendly) · Taj Bradley vs Tatsuya Imai · O/U 13.5</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Miami Marlins @ Colorado Rockies<span class="heat heat-warm">🌡 HITTER</span></div><div class="trend-desc">Coors Field · PF 1.380 (Hitter-friendly) · Max Meyer vs Kyle Freeland · O/U 9.5</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>San Francisco Giants @ Arizona Diamondbacks<span class="heat heat-cool">📊 PITCHER</span></div><div class="trend-desc">Chase Field · PF 1.020 (Neutral park) · Trevor McDonald vs Zac Gallen · O/U 8.5</div></div></div>
+<div class="trend-item"><div class="trend-rank" style="font-size:18px">⛅</div><div class="trend-body"><div class="trend-topic"><span class="si-tag si-weather">PARK</span>Los Angeles Dodgers @ Athletics<span class="heat heat-cool">📊 PITCHER</span></div><div class="trend-desc">Sutter Health Park · PF 0.950 (Pitcher-friendly) · TBD vs J.T. Ginn · O/U 9.5</div></div></div>
+</div>
+</div>
+<div id="tab-umps" class="tab-panel">
+<div class="main">
+  <div class="sec-title">Home Plate Umpires — 2026-07-01</div>
+  
+<div class="ump-table-wrap">
+<table>
+  <thead><tr><th>HP Umpire</th><th>Game</th><th>Grade</th><th>Score</th><th>Zone Tendency</th><th>O/U Impact</th></tr></thead>
+  <tbody><tr><td colspan="6" style="color:var(--mut);text-align:center">No umpire data available.</td></tr></tbody>
+</table>
+</div>
+<p style="font-size:11px;color:var(--mut);margin-top:10px">Grades: A=Consistent/fair · B=Average · C=Inconsistent · D=Erratic. Zone and O/U impact derived from historical tendencies.</p>
+</div>
+</div>
+<div class="modal-overlay" id="modalOverlay" onclick="overlayClick(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+<script>
+var MODAL_DATA = {"Cincinnati_Reds_Milwaukee_Brewers_away": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Cincinnati Reds <span style=\"color:#00e676\">+1200</span> <span style=\"font-size:12px;color:var(--mut)\">vs Milwaukee Brewers</span></div><div class=\"modal-sub\">Andrew Abbott (RHP) vs Shane Drohan (RHP)  |  HIGH 1.0u  |  Edge +32.0%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">39.7%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">7.7%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+32.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+1200</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Andrew Abbott (RHP) — Pitching Stats (18 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val warn\">3.88</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val bad\">1.44</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val bad\">6.9</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  \n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Cincinnati Reds — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Cincinnati Reds</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">46.4%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Milwaukee Brewers</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">62.7%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">American Family Field</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.010</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +32.0%: market prices Cincinnati Reds at 7.7%, model says 39.7%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Underdog value at +1200 — only needs 8% win rate to be +EV long-term</div></div>\n</div></div>", "Houston_Astros_Minnesota_Twins_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Houston Astros <span style=\"color:#00e676\">+517</span> <span style=\"font-size:12px;color:var(--mut)\">vs Minnesota Twins</span></div><div class=\"modal-sub\">Tatsuya Imai (RHP) vs Taj Bradley (RHP)  |  HIGH 1.0u  |  Edge +42.1%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">58.3%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">16.2%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+42.1%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+517</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Tatsuya Imai (RHP) — Pitching Stats (12 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val bad\">6.14</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val bad\">1.47</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val good\">11.2</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--grn);font-weight:700'>IMPROVING ▲</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Houston Astros — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Houston Astros</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">48.9%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Minnesota Twins</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">47.1%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Daikin Park</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">0.970</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +42.1%: market prices Houston Astros at 16.2%, model says 58.3%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Tatsuya Imai K/9 11.2 — elite strikeout rate, hard to score against</div></div>\n</div></div>", "Miami_Marlins_Colorado_Rockies_away": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Miami Marlins <span style=\"color:#00e676\">+1354</span> <span style=\"font-size:12px;color:var(--mut)\">vs Colorado Rockies</span></div><div class=\"modal-sub\">Max Meyer (RHP) vs Kyle Freeland (RHP)  |  HIGH 1.0u  |  Edge +30.4%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">37.3%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">6.9%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+30.4%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+1354</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Max Meyer (RHP) — Pitching Stats (18 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val good\">2.53</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val good\">1.11</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val good\">9.8</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--grn);font-weight:700'>IMPROVING ▲</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Miami Marlins — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Miami Marlins</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">53.5%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Colorado Rockies</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">38.4%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Coors Field</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.380</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +30.4%: market prices Miami Marlins at 6.9%, model says 37.3%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Max Meyer ERA 2.53 vs opp 7.25 — 4.72 ERA advantage in 18 GS</div></div>\n</div></div>", "Arizona_Diamondbacks_San_Francisco_Giants_home": "<div class=\"modal-hdr\" style=\"border-top:3px solid #00e676\"><div><div class=\"modal-title\">Arizona Diamondbacks <span style=\"color:#00e676\">+432</span> <span style=\"font-size:12px;color:var(--mut)\">vs San Francisco Giants</span></div><div class=\"modal-sub\">Zac Gallen (RHP) vs Trevor McDonald (RHP)  |  HIGH 1.0u  |  Edge +41.3%</div></div><button class=\"modal-close\" onclick=\"closeModal(event)\">&#x2715;</button></div><div class=\"modal-body\">\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Model Output</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Model Prob</div><div class=\"stat-val\" style=\"color:#00e676\">60.0%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Market Impl</div><div class=\"stat-val\">18.8%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Edge</div><div class=\"stat-val\" style=\"color:#00e676\">+41.3%</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Conviction</div><div class=\"stat-val\" style=\"color:#00e676;font-size:12px\">HIGH</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">Unit Size</div><div class=\"stat-val\">1.0u</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ML</div><div class=\"stat-val\">+432</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Zac Gallen (RHP) — Pitching Stats (18 GS)</div>\n  <div class=\"stat-grid\">\n    <div class=\"stat-box\"><div class=\"stat-lbl\">ERA</div><div class=\"stat-val bad\">6.18</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">FIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">xFIP</div><div class=\"stat-val warn\">4.50</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">WHIP</div><div class=\"stat-val bad\">1.55</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">K/9</div><div class=\"stat-val bad\">5.4</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">BB/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">HR/9</div><div class=\"stat-val good\">0.0</div></div>\n    <div class=\"stat-box\"><div class=\"stat-lbl\">QS Rate</div><div class=\"stat-val warn\">50%</div></div>\n  </div>\n  <div style='margin-top:8px;font-size:11px;color:var(--mut)'>Trend: <span style='color:var(--red);font-weight:700'>DECLINING ▼</span></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Arizona Diamondbacks — Offense &amp; Splits</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Season OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">wRC+</div><div class=\"split-val warn\">100</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs LHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">vs RHP OPS</div><div class=\"split-val\">0.720</div></div>\n    <div class=\"split-item\" style=\"border-color:#00e676\"><div class=\"split-lbl\">vs RHP (today)</div><div class=\"split-val\" style=\"color:#00e676\">0.720</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Last-10 R/G</div><div class=\"split-val\">4.5</div></div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Team Context</div>\n  <div class=\"two-col\">\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">Arizona Diamondbacks</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">50.6%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15 <span style=\"font-size:10px;color:var(--mut)\">(+0 runs)</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Bullpen ERA</div><div class=\"split-val warn\">4.20</div></div>\n      </div>\n    </div>\n    <div>\n      <div style=\"font-size:11px;color:var(--mut);margin-bottom:8px\">San Francisco Giants</div>\n      <div class=\"split-row\">\n        <div class=\"split-item\"><div class=\"split-lbl\">Win%</div><div class=\"split-val\">41.2%</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Streak</div><div class=\"stat-val\"><span class=\"streak-badge streak-n\">—</span></div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">Def Rank</div><div class=\"split-val warn\">#15</div></div>\n        <div class=\"split-item\"><div class=\"split-lbl\">OPS</div><div class=\"split-val\">0.720</div></div>\n      </div>\n    </div>\n  </div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Game Context</div>\n  <div class=\"split-row\">\n    <div class=\"split-item\"><div class=\"split-lbl\">Venue</div><div class=\"split-val\" style=\"font-size:11px\">Chase Field</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Park Factor</div><div class=\"split-val\">1.020</div></div>\n    <div class=\"split-item\"><div class=\"split-lbl\">Day/Night</div><div class=\"split-val\">Night</div></div>\n    \n  </div>\n  \n  <div style=\"margin-top:8px\"></div>\n</div>\n<div class=\"modal-section\">\n  <div class=\"msec-title\">Bettor Intel</div>\n  <div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Model edge +41.3%: market prices Arizona Diamondbacks at 18.8%, model says 60.0%</div></div><div class=\"intel-item\"><div class=\"intel-dot\"></div><div class=\"intel-text\">Underdog value at +432 — only needs 19% win rate to be +EV long-term</div></div>\n</div></div>"};
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'results' && window.__bankrollChart) {
+    setTimeout(function(){ window.__bankrollChart.resize(); }, 30);
+  }
+  if (id === 'mybets' && window.renderMyBets) { window.renderMyBets(); }
+}
+function openModal(id) {
+  var html = MODAL_DATA[id];
+  if (!html) return;
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(e) {
+  if (e) e.stopPropagation();
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e) {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+<script>
+var PICK_META = {"2026-06-26|Washington Nationals|120": {"date": "2026-06-26", "team": "Washington Nationals", "ml": 120, "conv": "HIGH", "units": 1.0, "result": "L", "pl": -25.0, "bet": 0}, "2026-06-26|Miami Marlins|102": {"date": "2026-06-26", "team": "Miami Marlins", "ml": 102, "conv": "HIGH", "units": 1.0, "result": "W", "pl": 25.5, "bet": 0}, "2026-06-26|Houston Astros|-102": {"date": "2026-06-26", "team": "Houston Astros", "ml": -102, "conv": "MEDIUM", "units": 0.5, "result": "L", "pl": -12.5, "bet": 0}, "2026-06-26|New York Yankees|-110": {"date": "2026-06-26", "team": "New York Yankees", "ml": -110, "conv": "LEAN", "units": 0.5, "result": "L", "pl": -12.5, "bet": 0}, "2026-06-27|Milwaukee Brewers|-169": {"date": "2026-06-27", "team": "Milwaukee Brewers", "ml": -169, "conv": "HIGH", "units": 1.0, "result": "L", "pl": -25.0, "bet": 0}, "2026-06-27|Boston Red Sox|102": {"date": "2026-06-27", "team": "Boston Red Sox", "ml": 102, "conv": "MEDIUM", "units": 0.5, "result": "W", "pl": 12.75, "bet": 0}, "2026-06-27|Atlanta Braves|-122": {"date": "2026-06-27", "team": "Atlanta Braves", "ml": -122, "conv": "MEDIUM", "units": 0.5, "result": "L", "pl": -12.5, "bet": 0}, "2026-06-28|Atlanta Braves|-162": {"date": "2026-06-28", "team": "Atlanta Braves", "ml": -162, "conv": "HIGH", "units": 1.0, "result": "L", "pl": -25.0, "bet": 0}, "2026-06-28|San Diego Padres|118": {"date": "2026-06-28", "team": "San Diego Padres", "ml": 118, "conv": "MED-HIGH", "units": 1.0, "result": "L", "pl": -25.0, "bet": 0}, "2026-06-28|Houston Astros|-131": {"date": "2026-06-28", "team": "Houston Astros", "ml": -131, "conv": "MEDIUM", "units": 1.0, "result": "W", "pl": 19.07, "bet": 0}, "2026-06-28|Boston Red Sox|-120": {"date": "2026-06-28", "team": "Boston Red Sox", "ml": -120, "conv": "LEAN", "units": 0.5, "result": "W", "pl": 10.42, "bet": 0}, "2026-06-29|Washington Nationals|155": {"date": "2026-06-29", "team": "Washington Nationals", "ml": 155, "conv": "HIGH", "units": 1.0, "result": "L", "pl": -25.0, "bet": 0}, "2026-06-29|Chicago White Sox|121": {"date": "2026-06-29", "team": "Chicago White Sox", "ml": 121, "conv": "HIGH", "units": 0.75, "result": "W", "pl": 22.68, "bet": 0}, "2026-06-29|Minnesota Twins|118": {"date": "2026-06-29", "team": "Minnesota Twins", "ml": 118, "conv": "MEDIUM", "units": 0.5, "result": "W", "pl": 14.75, "bet": 0}, "2026-06-29|San Diego Padres|140": {"date": "2026-06-29", "team": "San Diego Padres", "ml": 140, "conv": "MEDIUM", "units": 0.5, "result": "L", "pl": -12.5, "bet": 0}, "2026-06-29|Detroit Tigers|129": {"date": "2026-06-29", "team": "Detroit Tigers", "ml": 129, "conv": "LEAN", "units": 0.25, "result": "W", "pl": 8.08, "bet": 0}, "2026-06-30|Milwaukee Brewers|-138": {"date": "2026-06-30", "team": "Milwaukee Brewers", "ml": -138, "conv": "HIGH", "units": 1.0, "result": "W", "pl": 18.12, "bet": 0}, "2026-06-30|Detroit Tigers|124": {"date": "2026-06-30", "team": "Detroit Tigers", "ml": 124, "conv": "MEDIUM", "units": 0.5, "result": "W", "pl": 15.5, "bet": 0}, "2026-06-30|Los Angeles Dodgers|-175": {"date": "2026-06-30", "team": "Los Angeles Dodgers", "ml": -175, "conv": "MEDIUM", "units": 0.5, "result": "W", "pl": 7.15, "bet": 0}, "2026-06-30|Washington Nationals|115": {"date": "2026-06-30", "team": "Washington Nationals", "ml": 115, "conv": "COND", "units": 0.5, "result": "W", "pl": 14.37, "bet": 0}, "2026-07-01|Houston Astros|517": {"date": "2026-07-01", "team": "Houston Astros", "ml": 517, "conv": "HIGH", "units": 1.0, "result": null, "pl": 0.0, "bet": 0}, "2026-07-01|Arizona Diamondbacks|432": {"date": "2026-07-01", "team": "Arizona Diamondbacks", "ml": 432, "conv": "HIGH", "units": 1.0, "result": null, "pl": 0.0, "bet": 0}, "2026-07-01|Cincinnati Reds|1200": {"date": "2026-07-01", "team": "Cincinnati Reds", "ml": 1200, "conv": "HIGH", "units": 1.0, "result": null, "pl": 0.0, "bet": 0}, "2026-07-01|Miami Marlins|1354": {"date": "2026-07-01", "team": "Miami Marlins", "ml": 1354, "conv": "HIGH", "units": 1.0, "result": null, "pl": 0.0, "bet": 0}};
+var START_BANKROLL = 500, UNIT_DOLLARS = 25;
+
+(function(){
+  var LS_KEY = 'mlbMyBets_v1';
+  function load(){
+    try { var v = localStorage.getItem(LS_KEY); if(v) return new Set(JSON.parse(v)); } catch(e){}
+    var seed = [];
+    for (var pid in PICK_META){ if (PICK_META[pid].bet) seed.push(pid); }
+    return new Set(seed);
+  }
+  function save(set){ try{ localStorage.setItem(LS_KEY, JSON.stringify(Array.from(set))); }catch(e){} }
+  var selected = load();
+  function esc(x){ return (''+x).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+  function mlStr(ml){ ml=parseInt(ml,10); return ml>0?('+'+ml):(''+ml); }
+  function statc(l,v,c){ return '<div class="sc"><span class="sl">'+l+'</span><span class="sv '+c+'">'+v+'</span></div>'; }
+  window.toggleBet = function(cb){
+    var pid = cb.getAttribute('data-pid');
+    if (cb.checked) selected.add(pid); else selected.delete(pid);
+    save(selected);
+    if (window.renderMyBets) window.renderMyBets();
+  };
+  function syncBoxes(){
+    var bs = document.querySelectorAll('.betbox');
+    for (var i=0;i<bs.length;i++){ bs[i].checked = selected.has(bs[i].getAttribute('data-pid')); }
+  }
+  window.renderMyBets = function(){
+    var el = document.getElementById('mybets-body'); if(!el) return;
+    if (selected.size===0){ el.innerHTML = '<p style="color:var(--mut);padding:8px 4px">No bets selected yet. Tick the box on any pick card in the Today tab.</p>'; return; }
+    var graded=[], pending=[];
+    selected.forEach(function(pid){ var m=PICK_META[pid]; if(!m) return; (m.result==='W'||m.result==='L')?graded.push(m):pending.push(m); });
+    var w=0,l=0,pl=0,staked=0;
+    graded.forEach(function(m){ if(m.result==='W')w++; else l++; pl+=m.pl; staked+=m.units*UNIT_DOLLARS; });
+    var bank=START_BANKROLL+pl, n=w+l, wr=n?100*w/n:0, roi=staked?100*pl/staked:0, cls=pl>=0?'pos':'neg';
+    var html = '<div class="stats-bar" style="border-radius:8px;margin-bottom:14px">'
+      + statc('Record', w+'W-'+l+'L', cls) + '<div class="sdiv"></div>'
+      + statc('Win Rate', wr.toFixed(1)+'%', cls) + '<div class="sdiv"></div>'
+      + statc('P/L', (pl>=0?'+':'')+'$'+pl.toFixed(2), cls) + '<div class="sdiv"></div>'
+      + statc('ROI', (roi>=0?'+':'')+roi.toFixed(1)+'%', cls) + '<div class="sdiv"></div>'
+      + statc('Bankroll', '$'+bank.toFixed(2), cls) + '</div>';
+    if (pending.length){
+      html += '<div class="sec-title" style="font-size:13px">Pending ('+pending.length+')</div><table><thead><tr><th>Date</th><th>Pick</th><th>Conv</th><th>Size</th></tr></thead><tbody>';
+      pending.forEach(function(m){ html += '<tr><td>'+esc(m.date)+'</td><td>'+esc(m.team)+' '+mlStr(m.ml)+'</td><td>'+esc(m.conv)+'</td><td>'+m.units+'u</td></tr>'; });
+      html += '</tbody></table>';
+    }
+    if (graded.length){
+      graded.sort(function(a,b){ return a.date<b.date?1:-1; });
+      html += '<div class="sec-title" style="font-size:13px;margin-top:16px">Settled ('+graded.length+')</div><table><thead><tr><th>Date</th><th>Pick</th><th>Conv</th><th>Size</th><th>Result</th><th>P/L $</th></tr></thead><tbody>';
+      graded.forEach(function(m){ var rc=m.result==='W'?'pos':'neg'; html += '<tr><td>'+esc(m.date)+'</td><td>'+esc(m.team)+' '+mlStr(m.ml)+'</td><td>'+esc(m.conv)+'</td><td>'+m.units+'u</td><td class="'+rc+'">'+m.result+'</td><td class="'+rc+'">'+(m.pl>=0?'+':'')+'$'+m.pl.toFixed(2)+'</td></tr>'; });
+      html += '</tbody></table>';
+    }
+    el.innerHTML = html;
+  };
+  window.saveMyBets = function(){
+    var data = { version:1, generated:new Date().toISOString(), picks:Array.from(selected).map(function(pid){ var m=PICK_META[pid]||{}; return {pid:pid, date:m.date, team:m.team, ml:m.ml}; }) };
+    var blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+    var a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='my_bets.json'; document.body.appendChild(a); a.click(); a.remove();
+  };
+  window.clearMyBets = function(){ selected = new Set(); save(selected); syncBoxes(); window.renderMyBets(); };
+  if (document.readyState !== 'loading'){ syncBoxes(); window.renderMyBets(); }
+  else document.addEventListener('DOMContentLoaded', function(){ syncBoxes(); window.renderMyBets(); });
+})();
+
+</script>
+<div class="footer">MLB Betting Model v3 &nbsp;|&nbsp; bitskyb@gmail.com &nbsp;|&nbsp; Not financial advice.</div>
+</body>
+</html>
