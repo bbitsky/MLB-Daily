@@ -85,10 +85,40 @@ def _enable_wal(path):
     except Exception as _e:
         print(f"[DB] Warning: could not enable WAL on {path}: {_e}", file=sys.stderr)
 
+def _db_games_count(path):
+    """Games row count for a DB file, or -1 if missing/unreadable/no table.
+
+    Used to guard the shadow<->canonical copies: the synced project backup has
+    repeatedly ended up empty/corrupt, and copying it over a populated DB wipes
+    the training data. Comparing game counts lets us refuse a destructive copy.
+    """
+    try:
+        if not Path(path).exists():
+            return -1
+        _c = sqlite3.connect(str(path), timeout=5)
+        try:
+            n = _c.execute("SELECT COUNT(*) FROM games").fetchone()[0]
+        except Exception:
+            n = -1
+        _c.close()
+        return int(n)
+    except Exception:
+        return -1
+
 def _register_syncback(shadow, canonical):
     def _sync_shadow_back():
         try:
             if shadow and Path(shadow).exists():
+                # Guard: don't let an emptied/corrupt live DB overwrite a good
+                # backup. Only sync back when the working copy has at least as many
+                # games as the canonical backup (or the backup is missing/unreadable).
+                _sc = _db_games_count(shadow)
+                _cc = _db_games_count(canonical)
+                if _cc > _sc:
+                    print(f"[DB] Skipping sync-back: working DB has fewer games "
+                          f"({_sc}) than backup ({_cc}); preserving backup.",
+                          file=sys.stderr)
+                    return
                 # Checkpoint the WAL into the main .db file before copying back,
                 # so the synced backup is a single self-contained file.
                 try:
@@ -118,10 +148,24 @@ elif platform.system() == "Windows":
     _shadow_db_path = _base / "mlb.db"
     # Refresh the working copy whenever the canonical (synced) backup is newer
     # — e.g. after the nightly sandbox run updates it and it syncs down.
-    if _canonical_db_path.exists() and (
+    _want_refresh = _canonical_db_path.exists() and (
         not _shadow_db_path.exists()
         or _canonical_db_path.stat().st_mtime > _shadow_db_path.stat().st_mtime
-    ):
+    )
+    # Guard: NEVER let a newer-but-empty/corrupt synced backup overwrite a
+    # populated live DB. The synced data/mlb.db has repeatedly ended up as a 45KB
+    # empty husk after corruption events; a plain mtime check then wipes the live
+    # training data on the next import. Only refresh if the backup has at least as
+    # many games as the live DB (or the live DB is missing/unreadable).
+    if _want_refresh and _shadow_db_path.exists():
+        _cc = _db_games_count(_canonical_db_path)
+        _sc = _db_games_count(_shadow_db_path)
+        if _cc < _sc:
+            print(f"[DB] Skipping refresh: synced backup has fewer games "
+                  f"({_cc}) than live DB ({_sc}); keeping live DB.",
+                  file=sys.stderr)
+            _want_refresh = False
+    if _want_refresh:
         shutil.copy2(str(_canonical_db_path), str(_shadow_db_path))
     _enable_wal(_shadow_db_path)
     _register_syncback(_shadow_db_path, _canonical_db_path)
@@ -402,6 +446,22 @@ def fetch_game_starters(game_pk: int) -> dict:
         return {}
 
 
+# FIP reproduces a FanGraphs-style, defense-independent pitching quality metric
+# straight from raw MLB Stats API counts — no FanGraphs scrape (which 403s) needed.
+# FIP = (13*HR + 3*(BB+HBP) - 2*K) / IP + constant.
+FIP_CONSTANT = 3.15  # league FIP constant runs ~3.10-3.20; 3.15 is a stable default
+
+def compute_fip(hr, bb, hbp, so, ip):
+    """Compute FIP from raw counts. Returns None if IP is missing/zero."""
+    try:
+        ip = float(ip)
+        if ip <= 0:
+            return None
+        return round((13 * hr + 3 * (bb + hbp) - 2 * so) / ip + FIP_CONSTANT, 2)
+    except Exception:
+        return None
+
+
 def fetch_pitcher_season_stats(pitcher_id: int, season: int) -> dict:
     """Return ERA, QS rate, and other stats for a pitcher in a given season."""
     try:
@@ -418,16 +478,23 @@ def fetch_pitcher_season_stats(pitcher_id: int, season: int) -> dict:
         gs   = int(s.get("gamesStarted", 0))
         qs   = int(s.get("qualityStarts", 0))
         qs_rate = (qs / gs) if gs > 0 else 0.0
+        ip_f = float(s.get("inningsPitched", 0) or 0)
+        hr_  = int(s.get("homeRuns", 0) or 0)
+        bb_  = int(s.get("baseOnBalls", 0) or 0)
+        hbp_ = int(s.get("hitByPitch", 0) or 0)
+        so_  = int(s.get("strikeOuts", 0) or 0)
         return {
             "era":     era,
             "gs":      gs,
             "qs":      qs,
             "qs_rate": qs_rate,
-            "ip":      float(s.get("inningsPitched", 0)),
+            "ip":      ip_f,
             "k9":      float(s.get("strikeoutsPer9Inn", 0.0)),
             "bb9":     float(s.get("walksPer9Inn", 0.0)),
             "hr9":     float(s.get("homeRunsPer9", 0.0)),
             "whip":    float(s.get("whip", 1.30)),
+            "fip":     compute_fip(hr_, bb_, hbp_, so_, ip_f),
+            "hr": hr_, "bb": bb_, "hbp": hbp_, "so": so_,
         }
     except Exception:
         return {}
@@ -1216,6 +1283,15 @@ def get_team_batting_stats(team_name: str, season: int) -> dict:
 
     defaults = {"ops": 0.720, "wrc_plus": 100}  # league average
 
+    # Prefer downloaded Baseball-Reference data (OPS+ as the wRC+ substitute).
+    try:
+        import load_bref
+        _bb = load_bref.load_all(False)["batting"].get(team_name)
+        if _bb and _bb.get("ops_plus") is not None:
+            return {"ops": _bb.get("ops") or defaults["ops"], "wrc_plus": _bb["ops_plus"]}
+    except Exception:
+        pass
+
     if season not in _TEAM_BATTING_CACHE:
         df = get_team_batting_pybaseball(season)
         _TEAM_BATTING_CACHE[season] = df
@@ -1408,6 +1484,26 @@ def get_pitcher_advanced(pitcher_id: int, pitcher_name: str,
     recent = fetch_pitcher_last_n_starts(pitcher_id, season, n=5)
     result.update(recent)
 
+    # If FanGraphs didn't supply FIP (e.g. 403), compute it from MLB Stats API
+    # raw counts so the model keeps a real defense-independent pitching signal.
+    if "fip" not in result:
+        _ss = fetch_pitcher_season_stats(pitcher_id, season)
+        if _ss.get("fip") is not None:
+            result["fip"]  = _ss["fip"]
+            result.setdefault("xfip", _ss["fip"])   # no true xFIP without FanGraphs
+
+    # Baseball Savant expected stats (xERA / xwOBA-against) — luck-stripped
+    # pitching quality, matched to the pitcher by name. Best signal available.
+    try:
+        import load_savant
+        _sv = load_savant.pitcher_xstats(season).get(load_savant._norm_name(pitcher_name))
+        if _sv:
+            for _k in ("xera", "xwoba", "xba"):
+                if _sv.get(_k) is not None:
+                    result[_k] = _sv[_k]
+    except Exception:
+        pass
+
     return result
 
 # ─────────────────────────────────────────────
@@ -1461,10 +1557,15 @@ def fetch_team_last_game_date(team_name: str, before_date: str) -> str | None:
     try:
         con = sqlite3.connect(DB_PATH)
         cur = con.cursor()
+        # Only look within the SAME season — otherwise, when the games table
+        # holds only historical training data (2021-2025), the "last game" comes
+        # back years old and rest_days explodes to e.g. 1891.
+        season_start = before_date[:4] + "-01-01"
         row = cur.execute(
             "SELECT MAX(game_date) FROM games "
-            "WHERE (away_team=? OR home_team=?) AND game_date < ? AND status='Final'",
-            (team_name, team_name, before_date)
+            "WHERE (away_team=? OR home_team=?) AND game_date < ? AND game_date >= ? "
+            "AND status='Final'",
+            (team_name, team_name, before_date, season_start)
         ).fetchone()
         con.close()
         return row[0] if row else None
@@ -1537,6 +1638,37 @@ def fetch_team_splits(team_name: str, season: int) -> dict:
 _DEF_RANK_CACHE: dict = {}
 
 
+def _def_ranks_mlbapi(season: int) -> dict:
+    """Fallback team defensive ranks from the MLB Stats API team fielding stats
+    (used when FanGraphs 403s). Ranks by fielding % (higher = better).
+    Returns {full_team_name: {"def_rating": float, "def_rank": int}}."""
+    try:
+        data = _mlb_get("teams/stats", {"stats": "season", "group": "fielding",
+                                        "season": season, "sportIds": 1})
+        rows = []
+        for blk in data.get("stats", []):
+            for sp in blk.get("splits", []):
+                team = (sp.get("team") or {}).get("name")
+                fpct = sp.get("stat", {}).get("fielding")
+                if team and fpct is not None:
+                    try:
+                        rows.append((team, float(fpct)))
+                    except (TypeError, ValueError):
+                        pass
+        if not rows:
+            return {}
+        rows.sort(key=lambda r: r[1], reverse=True)   # best fielding% first
+        out = {}
+        for i, (team, fpct) in enumerate(rows):
+            # scale fielding% into a small runs-ish rating around 0
+            out[team] = {"def_rating": round((fpct - 0.984) * 1000, 1), "def_rank": i + 1}
+        print(f"  [DefRank] Using MLB Stats API fielding ({len(out)} teams) — FanGraphs unavailable.")
+        return out
+    except Exception as e:
+        print(f"  [DefRank] MLB API fallback failed: {e}")
+        return {}
+
+
 def fetch_team_defensive_ranks(season: int) -> dict:
     """
     Fetch team defensive ratings from pybaseball (FanGraphs team fielding).
@@ -1544,6 +1676,26 @@ def fetch_team_defensive_ranks(season: int) -> dict:
     """
     if season in _DEF_RANK_CACHE:
         return _DEF_RANK_CACHE[season]
+
+    # Prefer Baseball Savant Outs Above Average (best defensive metric).
+    try:
+        import load_savant
+        _oaa = load_savant.team_oaa(season)
+        if _oaa and len(_oaa) >= 20:
+            _DEF_RANK_CACHE[season] = _oaa
+            return _oaa
+    except Exception:
+        pass
+
+    # Then downloaded Baseball-Reference fielding (real Rdrs / Defensive Runs Saved).
+    try:
+        import load_bref
+        _br = load_bref.def_ranks()
+        if _br:
+            _DEF_RANK_CACHE[season] = _br
+            return _br
+    except Exception:
+        pass
 
     try:
         from pybaseball import team_fielding
@@ -1598,9 +1750,10 @@ def fetch_team_defensive_ranks(season: int) -> dict:
         _DEF_RANK_CACHE[season] = result
         return result
     except Exception as e:
-        print(f"  [DefRank] Error: {e}")
-        _DEF_RANK_CACHE[season] = {}
-        return {}
+        print(f"  [DefRank] FanGraphs unavailable ({e}) — trying MLB Stats API.")
+        result = _def_ranks_mlbapi(season)
+        _DEF_RANK_CACHE[season] = result
+        return result
 
 
 def fetch_today_game_data(target_date: str = None) -> list[dict]:
@@ -1758,11 +1911,18 @@ def fetch_today_game_data(target_date: str = None) -> list[dict]:
         def rest_days(team, date):
             last = fetch_team_last_game_date(team, date)
             if not last:
-                return 5  # default
+                return 1  # no recent game in DB -> assume normal in-season cadence
             from datetime import date as dclass
-            d1 = dclass.fromisoformat(last)
-            d2 = dclass.fromisoformat(date)
-            return max(1, (d2 - d1).days)
+            try:
+                days = (dclass.fromisoformat(date) - dclass.fromisoformat(last)).days
+            except Exception:
+                return 1
+            # In-season, teams essentially never rest more than ~4 days (the
+            # All-Star break is the max). Anything larger means the games table is
+            # missing recent games, so don't surface a bogus "1891 days off".
+            if days < 1 or days > 6:
+                return 1
+            return days
 
         away_rest = rest_days(away_name, target_date)
         home_rest = rest_days(home_name, target_date)
@@ -1853,6 +2013,11 @@ def fetch_today_game_data(target_date: str = None) -> list[dict]:
             "home_fip":      home_sp.get("fip",        LEAGUE_AVG_ERA),
             "away_xfip":     away_sp.get("xfip",       LEAGUE_AVG_ERA),
             "home_xfip":     home_sp.get("xfip",       LEAGUE_AVG_ERA),
+            # Baseball Savant expected stats (None -> model falls back to FIP/neutral)
+            "away_xera":     away_sp.get("xera"),
+            "home_xera":     home_sp.get("xera"),
+            "away_xwoba":    away_sp.get("xwoba"),
+            "home_xwoba":    home_sp.get("xwoba"),
             # Recent form (last 5 starts)
             "away_last5_era":     away_sp.get("last_n_era",    None),
             "home_last5_era":     home_sp.get("last_n_era",    None),
@@ -1895,6 +2060,8 @@ def fetch_today_game_data(target_date: str = None) -> list[dict]:
             "home_def_rank":   home_def_rank,
             "away_def_rating": away_def_rating,
             "home_def_rating": home_def_rating,
+            "away_oaa":        away_def_rating,   # OAA when Savant is the def source
+            "home_oaa":        home_def_rating,
             # Day/night
             "is_day_game": is_day_game,
             # Auto-computed contextual triggers
@@ -2031,7 +2198,20 @@ def load_dataset_from_db():
     """Load the full historical dataset from SQLite into a DataFrame."""
     init_db()
     con = sqlite3.connect(DB_PATH)
-    df = pd.read_sql("""
+    # Optional games columns added by mlb_backfill (streaks, day/night, OPS, def
+    # rank). These live on the games table but must be SELECTed explicitly or
+    # build_features falls back to constants and drops them as zero-variance.
+    # Include only the ones that exist so the loader still works on a DB built
+    # before mlb_backfill ran (otherwise the SELECT would error on a missing col).
+    _gcols = {r[1] for r in con.execute("PRAGMA table_info(games)")}
+    _optional = [c for c in (
+        "is_day_game", "away_streak", "home_streak",
+        "away_ops", "home_ops", "away_wrc_plus", "home_wrc_plus",
+        "away_def_rank", "home_def_rank",
+        "away_vs_sp_ops", "home_vs_sp_ops",
+    ) if c in _gcols]
+    _opt_sql = "".join(f", g.{c}" for c in _optional)
+    df = pd.read_sql(f"""
         SELECT
             g.game_pk, g.game_date, g.season, g.away_team, g.home_team,
             g.away_score, g.home_score, g.away_win,
@@ -2043,7 +2223,7 @@ def load_dataset_from_db():
             a.pitcher_name AS away_starter, h.pitcher_name AS home_starter,
             ab.era AS away_bullpen_era, hb.era AS home_bullpen_era,
             u.hp_name      AS hp_name,
-            u.run_factor   AS ump_run_factor
+            u.run_factor   AS ump_run_factor{_opt_sql}
         FROM games g
         LEFT JOIN starters a  ON g.game_pk=a.game_pk AND a.side='away'
         LEFT JOIN starters h  ON g.game_pk=h.game_pk AND h.side='home'

@@ -30,7 +30,14 @@ from collections import defaultdict
 
 import requests
 
-DB_PATH = Path(__file__).parent / "data" / "mlb.db"
+# Resolve the SAME DB the trainer/daily pipeline uses. mlb_data relocates the live
+# DB to %LOCALAPPDATA%\MLB-Daily\mlb.db on Windows (and honors MLB_DB_PATH). Importing
+# it here guarantees the backfill writes to the file mlb_train.py actually reads —
+# hardcoding data/mlb.db silently wrote to the project copy the trainer never opens.
+try:
+    from mlb_data import DB_PATH
+except Exception:
+    DB_PATH = Path(__file__).parent / "data" / "mlb.db"
 MLB_API = "https://statsapi.mlb.com/api/v1"
 
 # ── FanGraphs abbrev -> MLB full name ──────────────────────────────────────────

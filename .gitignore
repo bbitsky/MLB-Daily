@@ -1,14 +1,51 @@
+# ── Python ──────────────────────────────────────────────
 __pycache__/
 *.pyc
 *.pyo
-.env
-data/mlb.db
-data/mlb.db.bak
-data/mlb_recovered.db
-joblib_stub/
 *.pkl
-*.log
+joblib_stub/
 
-# Broken FUSE symlink
+# ── Secrets ─────────────────────────────────────────────
+.env
+
+# ── SQLite DB + every sidecar/backup (never commit the DB) ──
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/*.db.bak
+data/*.corrupt*
+data/*_repaired.db
+data/mlb_recovered.db
+mlb_repaired.db
 data/data
-*.db.bak
+# FUSE sync artifacts from the Linux sandbox
+.fuse_hidden*
+data/.fuse_hidden*
+
+# ── Scratch / logs / editor backups ─────────────────────
+*.bak
+*.log
+*.tmp
+err.txt
+*_output.txt
+_synccheck.txt
+_umptest.py
+debug_dashboard.py
+debug_output.txt
+# session-only regen / one-off scripts
+regen_*.py
+run_daily_x.py
+
+# ── Large downloaded data (regenerable, not source) ─────
+mlb-odds-*.xlsx
+savant_oaa*.csv
+sportsref_download*.xls
+sportsref_download*.xlsx
+
+# ── Generated daily outputs (reproducible; live copy is on gh-pages) ──
+mlb_dashboard_*.html
+picks_frozen_*.json
+
+# Kept on purpose: all *.py pipeline code, *.bat, *.md notes/runbooks,
+# requirements.txt, picks_history_backup.csv (the ledger), data/mlb_metrics.json

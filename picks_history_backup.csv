@@ -24,3 +24,27 @@ game_date,pick_team,ml,conviction,units,result,profit_loss
 2026-07-01,Washington Nationals,160,MEDIUM,0.5,W,0.8
 2026-07-01,Detroit Tigers,120,MEDIUM,0.5,W,0.6
 2026-07-01,Philadelphia Phillies,-136,MEDIUM,0.5,W,0.368
+2026-07-02,Miami Marlins,-126,MED-HIGH,0.75,L,-0.75
+2026-07-02,Philadelphia Phillies,-122,LEAN,0.25,L,-0.25
+2026-07-03,St. Louis Cardinals,106,LEAN,0.25,W,0.265
+2026-07-04,Seattle Mariners,114,MED-HIGH,0.5,W,0.57
+2026-07-04,Texas Rangers,-102,LEAN,0.25,L,-0.25
+2026-07-05,Arizona Diamondbacks,104,MED-HIGH,0.5,L,-0.5
+2026-07-06,San Francisco Giants,-106,MEDIUM,0.5,W,0.47
+2026-07-09,Chicago Cubs,108,HIGH,0.75,L,-0.75
+2026-07-09,Chicago White Sox,-112,LEAN,0.25,L,-0.25
+2026-07-09,St. Louis Cardinals,108,MEDIUM,0.5,W,0.54
+2026-07-09,Minnesota Twins,114,MEDIUM,0.5,L,-0.5
+2026-07-09,Miami Marlins,120,LEAN,0.25,W,0.3
+2026-07-10,Texas Rangers,118,HIGH,0.75,W,0.885
+2026-07-10,St. Louis Cardinals,138,MEDIUM,0.5,W,0.69
+2026-07-11,Texas Rangers,120,HIGH,0.75,L,-0.75
+2026-07-11,Detroit Tigers,120,HIGH,0.75,L,-0.75
+2026-07-11,St. Louis Cardinals,138,LEAN,0.25,L,-0.25
+2026-07-11,Kansas City Royals,134,LEAN,0.25,L,-0.25
+2026-07-12,Arizona Diamondbacks,240,HIGH,0.75,,
+2026-07-12,Washington Nationals,160,HIGH,0.75,,
+2026-07-12,Cincinnati Reds,115,MED-HIGH,0.6,,
+2026-07-12,St. Louis Cardinals,120,MED-HIGH,0.6,,
+2026-07-12,Kansas City Royals,134,MEDIUM,0.5,,
+2026-07-12,San Diego Padres,104,LEAN,0.25,,

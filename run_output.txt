@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\bitsk\Claude\Projects\MLB Daily\mlb_daily.py", line 620, in <module>
-    run_daily_picks(target_date=args.date, manual_overlays=MANUAL_OVERLAYS)
-  File "C:\Users\bitsk\Claude\Projects\MLB Daily\mlb_daily.py", line 230, in run_daily_picks
-    print(f"\n{'\u2550'*65}")
-  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.12_3.12.2800.0_x64__qbz5n2kfra8p0\Lib\encodings\cp1252.py", line 19, in encode
-    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-UnicodeEncodeError: 'charmap' codec can't encode characters in position 2-66: character maps to <undefined>

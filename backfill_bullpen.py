@@ -22,7 +22,12 @@ import requests
 from pathlib import Path
 
 MLB_API_BASE = "https://statsapi.mlb.com/api/v1"
-DB_PATH = Path(__file__).parent / "data" / "mlb.db"
+# Use the trainer's DB (LocalAppData on Windows / MLB_DB_PATH override), not the
+# project copy — otherwise the backfilled bullpen ERA never reaches the model.
+try:
+    from mlb_data import DB_PATH
+except Exception:
+    DB_PATH = Path(__file__).parent / "data" / "mlb.db"
 DEFAULT_ERA = 4.20
 
 

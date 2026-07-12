@@ -51,9 +51,18 @@ def _run(cmd: list[str], cwd: str = None, check: bool = True) -> subprocess.Comp
 
 
 def _inject_token(url: str, token: str) -> str:
-    """Embed a GitHub PAT into an HTTPS repo URL for auth."""
+    """Embed a GitHub PAT into an HTTPS repo URL for auth.
+
+    The token must be the PASSWORD, not the username — GitHub rejects
+    token-as-username on push ("Password authentication is not supported").
+    We use the repo owner as the username. Also strip any stray CR from the
+    token (the .env is CRLF, which can leave a trailing \\r)."""
+    import re
+    token = (token or "").strip().strip('"').strip("'")
     if token and "github.com" in url and "@" not in url:
-        url = url.replace("https://", f"https://{token}@")
+        m = re.search(r"github\.com[/:]([^/]+)/", url)
+        user = m.group(1) if m else "git"
+        url = url.replace("https://", f"https://{user}:{token}@")
     return url
 
 

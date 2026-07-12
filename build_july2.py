@@ -15,6 +15,7 @@ if platform.system() == "Linux" and " " in str(orig_db):
     print(f"  [DB] shadow -> {tmp_db}")
 
 import mlb_dashboard as dash
+import mlb_data as _md   # unconditional so _md.DB_PATH is available on all platforms
 
 TODAY = "2026-07-02"
 
@@ -124,7 +125,7 @@ except Exception as e:
 
 try:
     import mlb_results as _mr
-    _mr.DB_PATH = str(tmp_db)
+    _mr.DB_PATH = str(_md.DB_PATH)
     pick_record = _mr.get_pick_record()
 except Exception as e:
     print(f"  [DB] pick_record error: {e}")
@@ -132,7 +133,7 @@ except Exception as e:
 
 try:
     import mlb_results as _mr
-    _mr.DB_PATH = str(tmp_db)
+    _mr.DB_PATH = str(_md.DB_PATH)
     bankroll_data = _mr.get_bankroll_data()
 except Exception as e:
     print(f"  [DB] bankroll_data error: {e}")

@@ -340,6 +340,121 @@ def injury_intel(games, max_per_game=3):
                         "desc": f"{names}{more}."})
     return out
 
+# ── 5. MOMENTUM / STREAKS (from our own games DB) ─────────────────────────────
+def _team_recent_form(con, team, n=10):
+    """Most-recent n finished games for a team -> (results[bool win], runs_for)."""
+    try:
+        rows = con.execute("""
+            SELECT away_team, home_team, away_score, home_score
+            FROM games
+            WHERE status='Final' AND (away_team=? OR home_team=?)
+              AND away_score IS NOT NULL AND home_score IS NOT NULL
+            ORDER BY game_date DESC LIMIT ?
+        """, (team, team, n)).fetchall()
+    except Exception:
+        return [], []
+    results, runs_for = [], []
+    for at, ht, as_, hs in rows:
+        if at == team:
+            results.append(as_ > hs); runs_for.append(as_)
+        else:
+            results.append(hs > as_); runs_for.append(hs)
+    return results, runs_for
+
+
+def streak_intel(games, db=None, min_streak=4):
+    """MOMENTUM items derived from our games table: current W/L streak, last-10
+    record, and last-10 runs/game. Surfaces only the notable ones (hot/cold)."""
+    out = []
+    try:
+        con = _conn(db)
+    except Exception:
+        return out
+    seen, teams = set(), []
+    for g in games or []:
+        for t in (g.get("away_team"), g.get("home_team")):
+            if t and t not in seen:
+                seen.add(t); teams.append(t)
+    for team in teams:
+        results, runs = _team_recent_form(con, team, 10)
+        if len(results) < 5:
+            continue
+        streak, first = 0, results[0]
+        for r in results:
+            if r == first:
+                streak += 1
+            else:
+                break
+        w10 = sum(1 for r in results if r); l10 = len(results) - w10
+        rpg = sum(runs) / len(runs) if runs else 0.0
+        if first and streak >= min_streak:
+            out.append({"type": "MOMENTUM", "topic": f"{team} — {streak}-game win streak",
+                        "desc": f"{w10}-{l10} over their last 10, {rpg:.1f} runs/game. Riding a {streak}-game heater."})
+        elif (not first) and streak >= min_streak:
+            out.append({"type": "MOMENTUM", "topic": f"{team} — {streak}-game skid",
+                        "desc": f"{w10}-{l10} over their last 10, {rpg:.1f} runs/game. Lost {streak} straight."})
+        elif w10 >= 8:
+            out.append({"type": "MOMENTUM", "topic": f"{team} — hot ({w10}-{l10} L10)",
+                        "desc": f"Won {w10} of their last 10, {rpg:.1f} runs/game."})
+        elif l10 >= 8:
+            out.append({"type": "MOMENTUM", "topic": f"{team} — cold ({w10}-{l10} L10)",
+                        "desc": f"Just {w10} wins in their last 10, {rpg:.1f} runs/game."})
+    try:
+        con.close()
+    except Exception:
+        pass
+    return out
+
+
+# ── 6. HOT HITTERS (MLB Stats API, best-effort) ───────────────────────────────
+def team_hot_bats(team, season=None, days=14, min_ab=12):
+    """The team's hottest hitter over the last `days` as {'name','line'}, from the
+    MLB Stats API (active roster -> per-player byDateRange hitting). Only returns a
+    genuinely hot bat (OPS >= .850). None on any failure."""
+    tid = (_MLB_TEAM_IDS or {}).get(team)
+    if not tid or requests is None:
+        return None
+    try:
+        import datetime as _dt
+        end = _dt.date.today(); start = end - _dt.timedelta(days=days)
+        season = season or end.year
+        roster = _mlb_get(f"teams/{tid}/roster", {"rosterType": "active"})
+        ids = []
+        for e in (roster or {}).get("roster", []):
+            if (e.get("position") or {}).get("abbreviation") == "P":
+                continue
+            pid = (e.get("person") or {}).get("id")
+            if pid:
+                ids.append(str(pid))
+        if not ids:
+            return None
+        data = _mlb_get("people", {
+            "personIds": ",".join(ids[:40]),
+            "hydrate": (f"stats(group=hitting,type=byDateRange,"
+                        f"startDate={start.isoformat()},endDate={end.isoformat()})"),
+        })
+        best = None
+        for person in (data or {}).get("people", []):
+            nm = person.get("fullName", "")
+            for s in (person.get("stats") or []):
+                for sp in (s.get("splits") or []):
+                    st = sp.get("stat", {})
+                    ab = int(st.get("atBats", 0) or 0)
+                    if ab < min_ab:
+                        continue
+                    ops = float(st.get("ops", 0) or 0)
+                    hr = int(st.get("homeRuns", 0) or 0)
+                    avg = st.get("avg", "")
+                    if best is None or ops > best[0]:
+                        line = f"{avg} / {ops:.3f} OPS" + (f", {hr} HR" if hr else "") + f" last {days}d"
+                        best = (ops, nm, line)
+        if best and best[0] >= 0.850:
+            return {"name": best[1], "line": best[2]}
+    except Exception:
+        return None
+    return None
+
+
 # ── Convenience aggregators ───────────────────────────────────────────────────
 def build_bettor_news(events, target_date=None, db=None, do_snapshot=True):
     """Full betting-trends list: line movement (if history) + shopping/disagreement."""
@@ -354,9 +469,13 @@ def build_bettor_news(events, target_date=None, db=None, do_snapshot=True):
     news += bettor_news_from_odds(events)
     return news
 
-def build_social_intel(games, want_injuries=True):
-    """Full social-intel list: weather (+ injuries if MLB API reachable)."""
-    intel = weather_intel(games)
+def build_social_intel(games, want_injuries=True, db=None):
+    """Full social-intel list: momentum + weather + umpire + situational (+ injuries).
+    Momentum leads because it's real, number-driven signal from our own game log."""
+    intel  = streak_intel(games, db=db)
+    intel += weather_intel(games)
+    intel += umpire_intel(games)
+    intel += situational_intel(games)
     if want_injuries:
         intel += injury_intel(games)
     return intel
@@ -405,5 +524,114 @@ def generate_intel(target_date, events=None, db=None, games=None):
     if games is None:
         games = fetch_today_games_light(target_date)
     bettor = build_bettor_news(events, target_date, db=db)
-    social = build_social_intel(games)
+    social = build_social_intel(games, db=db)
     return bettor, social
+
+
+# ── Batter-vs-Pitcher (MLB Stats API vsPlayer) ────────────────────────────────
+def _bvp_line(stat):
+    ab = stat.get("atBats", 0) or 0; h = stat.get("hits", 0) or 0
+    hr = stat.get("homeRuns", 0) or 0
+    if ab < 5: return None
+    line = f"{h}-for-{ab}" + (f", {hr} HR" if hr else "")
+    avg = h / ab if ab else 0
+    if avg >= 0.320 or hr >= 2:
+        return {"line": line, "tag": "hot", "ab": ab}
+    if avg <= 0.150 and ab >= 8:
+        return {"line": line, "tag": "cold", "ab": ab}
+    return None
+
+def fetch_bvp(pitcher_id, batter_ids, season=None, timeout=12, max_notes=2):
+    """Notable batter-vs-pitcher lines for a pitcher vs a set of batter IDs.
+    Uses the MLB Stats API vsPlayer split. Returns [] on any failure."""
+    out = []
+    if requests is None or not pitcher_id or not batter_ids:
+        return out
+    for bid in batter_ids:
+        try:
+            r = requests.get(f"https://statsapi.mlb.com/api/v1/people/{bid}/stats",
+                             params={"stats": "vsPlayerTotal", "group": "hitting",
+                                     "opposingPlayerId": pitcher_id}, timeout=timeout)
+            r.raise_for_status()
+            for blk in r.json().get("stats", []):
+                for sp in blk.get("splits", []):
+                    note = _bvp_line(sp.get("stat", {}))
+                    if note:
+                        note["batter"] = (sp.get("batter", {}) or {}).get("fullName", "A hitter")
+                        out.append(note)
+        except Exception:
+            continue
+    # juiciest first: biggest sample, hot before cold
+    out.sort(key=lambda n: (n["tag"] != "hot", -n["ab"]))
+    return out[:max_notes]
+
+def _lineup_ids(game_pk, side, timeout=12):
+    """Confirmed batting order IDs for one side of a game, or []."""
+    if requests is None or not game_pk:
+        return []
+    try:
+        r = requests.get(f"https://statsapi.mlb.com/api/v1/game/{game_pk}/boxscore", timeout=timeout)
+        r.raise_for_status()
+        t = r.json().get("teams", {}).get(side, {})
+        order = t.get("battingOrder") or []
+        return list(order)[:9]
+    except Exception:
+        return []
+
+def attach_bvp(games, season=None):
+    """Best-effort: enrich each game dict with away_bvp/home_bvp using confirmed
+    lineups vs the opposing probable pitcher. Needs game_pk + pitcher IDs, so it
+    only populates on the live pipeline (Windows). Silent no-op otherwise."""
+    for g in games or []:
+        gpk = g.get("game_pk") or g.get("gamePk")
+        for side, opp in (("away", "home"), ("home", "away")):
+            pid = g.get(f"{opp}_pitcher_id") or g.get(f"{opp}_starter_id")
+            batters = _lineup_ids(gpk, side) if gpk else []
+            if pid and batters:
+                g[f"{side}_bvp"] = fetch_bvp(pid, batters, season)
+    return games
+
+# ── Umpire tendencies ─────────────────────────────────────────────────────────
+def umpire_intel(games):
+    out = []
+    for g in games:
+        ump = g.get("hp_umpire") or g.get("hp_name") or ""
+        rf  = g.get("ump_run_factor") or g.get("run_factor")
+        if not ump:
+            continue
+        away, home = g.get("away_team", ""), g.get("home_team", "")
+        if rf is None:
+            continue
+        try: rf = float(rf)
+        except Exception: continue
+        if rf >= 1.04:
+            desc = f"HP ump {ump} runs a hitter's zone (run factor {rf:.2f}) — small nudge toward the over."
+        elif rf <= 0.96:
+            desc = f"HP ump {ump} squeezes the zone (run factor {rf:.2f}) — leans under, helps the better arm."
+        else:
+            desc = f"HP ump {ump} calls it down the middle (run factor {rf:.2f}) — no strong total lean."
+        out.append({"type": "UMPIRE", "topic": f"{away} @ {home} — behind the plate", "desc": desc})
+    return out
+
+# ── Situational spots (revenge, streaks, rest, day-after-blowout) ─────────────
+def situational_intel(games):
+    out = []
+    for g in games:
+        away, home = g.get("away_team", ""), g.get("home_team", "")
+        bits = []
+        dab = g.get("day_after_blowout_team")
+        if dab:
+            bits.append(f"{dab} are a day removed from a blowout — spent bullpen and a possible letdown/bounce-back spot.")
+        sn, gis = g.get("series_game_num"), g.get("games_in_series")
+        if sn and gis and sn == gis and gis >= 3:
+            bits.append("Getaway game — travel looming, watch for rested regulars sitting.")
+        for sd, nm in (("away", away), ("home", home)):
+            st = g.get(f"{sd}_streak")
+            if isinstance(st, (int, float)) and abs(st) >= 4:
+                bits.append(f"{nm} come in {'winners of' if st>0 else 'losers of'} {abs(int(st))} straight — {'riding hot' if st>0 else 'reeling'}.")
+            rest = g.get(f"{sd}_rest")
+            if isinstance(rest, (int, float)) and rest >= 6:
+                bits.append(f"{nm} are well-rested ({int(rest)} days) with a fresh pen.")
+        if bits:
+            out.append({"type": "SITUATION", "topic": f"{away} @ {home} — angles", "desc": " ".join(bits[:3])})
+    return out

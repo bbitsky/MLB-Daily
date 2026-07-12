@@ -19,3 +19,11 @@ game_date,pick_team,ml,conviction,units,result,profit_loss
 2026-06-30,Detroit Tigers,124,MEDIUM,0.5,W,0.62
 2026-06-30,Los Angeles Dodgers,-175,MEDIUM,0.5,W,0.286
 2026-06-30,Washington Nationals,115,COND,0.5,W,0.575
+2026-07-01,San Francisco Giants,100,HIGH,1.0,W,1.0
+2026-07-01,Athletics,138,MEDIUM,0.5,W,0.69
+2026-07-01,Washington Nationals,160,MEDIUM,0.5,W,0.8
+2026-07-01,Detroit Tigers,120,MEDIUM,0.5,W,0.6
+2026-07-01,Philadelphia Phillies,-136,MEDIUM,0.5,W,0.368
+2026-07-02,Miami Marlins,-126,MED-HIGH,0.75,L,-0.75
+2026-07-02,Philadelphia Phillies,-122,LEAN,0.25,L,-0.25
+2026-07-03,St. Louis Cardinals,106,LEAN,0.25,W,0.265

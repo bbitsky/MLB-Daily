@@ -70,7 +70,48 @@ FEATURES = [
     "away_streak_norm", "home_streak_norm",
     "def_rank_diff",             # home_def_rank - away_def_rank (positive = away better defense)
     "is_day_game",
+    # ── Baseball Savant / Statcast (joined by pitcher-season / team-season) ──
+    "xera_diff", "away_xera_norm", "home_xera_norm",   # expected ERA (luck-stripped)
+    "xwoba_diff",                                       # starter xwOBA-against differential
+    "oaa_diff",                                         # team Outs Above Average differential
 ]
+
+
+def enrich_savant(df: pd.DataFrame) -> pd.DataFrame:
+    """Join Baseball Savant xERA/xwOBA (per pitcher-season) and OAA (per team-season)
+    onto the frame so the model can learn from Statcast. Safe no-op if Savant data
+    isn't available — the columns stay NaN and build_features fills them."""
+    try:
+        import load_savant
+    except Exception:
+        return df
+    df = df.copy()
+    for c in ("away_xera", "home_xera", "away_xwoba", "home_xwoba", "away_oaa", "home_oaa"):
+        if c not in df.columns:
+            df[c] = np.nan
+    if "season" not in df.columns:
+        return df
+    for yr in sorted({int(s) for s in df["season"].dropna().unique()}):
+        try:
+            xs = load_savant.pitcher_xstats(yr)
+        except Exception:
+            xs = {}
+        try:
+            oaa = load_savant.team_oaa(yr)
+        except Exception:
+            oaa = {}
+        m = df["season"] == yr
+        if xs:
+            for side in ("away", "home"):
+                nm = df.loc[m, f"{side}_starter"].map(
+                    lambda x: load_savant._norm_name(x) if pd.notna(x) else "")
+                df.loc[m, f"{side}_xera"]  = nm.map(lambda n: (xs.get(n) or {}).get("xera"))
+                df.loc[m, f"{side}_xwoba"] = nm.map(lambda n: (xs.get(n) or {}).get("xwoba"))
+        if oaa:
+            for side in ("away", "home"):
+                df.loc[m, f"{side}_oaa"] = df.loc[m, f"{side}_team"].map(
+                    lambda t: (oaa.get(t) or {}).get("def_rating"))
+    return df
 
 
 def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
@@ -79,6 +120,9 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     Returns (X, y) where y=1 means away team won.
     """
     df = df.copy()
+
+    # Join Statcast (xERA/xwOBA/OAA) before feature construction.
+    df = enrich_savant(df)
 
     # Drop rows with missing critical fields
     df = df.dropna(subset=["away_era", "home_era", "away_win"])
@@ -101,6 +145,23 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     df["xfip_diff"]      = away_xfip - home_xfip
     df["away_xfip_norm"] = (away_xfip - LEAGUE_AVG_ERA) / 1.5
     df["home_xfip_norm"] = (home_xfip - LEAGUE_AVG_ERA) / 1.5
+
+    # ── Statcast xERA (expected ERA; fall back to FIP -> ERA when missing) ──
+    away_xera = df.get("away_xera", pd.Series(np.nan, index=df.index)).fillna(away_fip)
+    home_xera = df.get("home_xera", pd.Series(np.nan, index=df.index)).fillna(home_fip)
+    df["xera_diff"]      = away_xera - home_xera
+    df["away_xera_norm"] = (away_xera - LEAGUE_AVG_ERA) / 1.5
+    df["home_xera_norm"] = (home_xera - LEAGUE_AVG_ERA) / 1.5
+
+    # ── Statcast xwOBA-against (lower = better pitcher; league avg ~.320) ──
+    away_xwoba = df.get("away_xwoba", pd.Series(np.nan, index=df.index)).fillna(0.320)
+    home_xwoba = df.get("home_xwoba", pd.Series(np.nan, index=df.index)).fillna(0.320)
+    df["xwoba_diff"] = away_xwoba - home_xwoba   # positive = away starter worse (matches era_diff)
+
+    # ── Statcast team OAA differential (positive = away better defense) ──
+    away_oaa = df.get("away_oaa", pd.Series(0.0, index=df.index)).fillna(0.0)
+    home_oaa = df.get("home_oaa", pd.Series(0.0, index=df.index)).fillna(0.0)
+    df["oaa_diff"] = away_oaa - home_oaa
 
     # ── OPS differential (team offense) ──
     away_ops = df.get("away_ops", pd.Series(0.720, index=df.index)).fillna(0.720)
@@ -371,6 +432,34 @@ def train_model(df: pd.DataFrame, model_type: str = "xgboost") -> dict:
     }
 
 
+def walk_forward_oos_probs(df: pd.DataFrame, model_type: str = "xgboost") -> pd.Series:
+    """OUT-OF-SAMPLE away-win probabilities aligned to df.index, for honest CLV.
+
+    For each season i>=1: train on seasons[:i], predict season i. The earliest
+    season is left NaN (no prior data to train on). Unlike the final saved model,
+    no game is ever predicted by a model that trained on it -> no in-sample
+    optimism. Used by clv_report.py.
+    """
+    df = compute_record_features(df)
+    seasons = sorted(df["season"].unique())
+    oos = pd.Series(index=df.index, dtype=float)
+    if len(seasons) < 2:
+        return oos  # cannot do out-of-sample with a single season
+    for i in range(1, len(seasons)):
+        train_df = df[df["season"].isin(seasons[:i])]
+        test_df  = df[df["season"] == seasons[i]]
+        X_train, y_train = build_features(train_df)
+        X_test,  _       = build_features(test_df)
+        zero_var = [c for c in X_train.columns if X_train[c].std() < 1e-6]
+        if zero_var:
+            X_train = X_train.drop(columns=zero_var)
+            X_test  = X_test.drop(columns=zero_var)
+        model = _fit_model(X_train, y_train, model_type)
+        probs = np.array(model.predict_proba(X_test))[:, 1]
+        oos.loc[X_test.index] = probs
+    return oos
+
+
 def _fit_model(X: pd.DataFrame, y: pd.Series, model_type: str = "xgboost"):
     """Fit and return the chosen model."""
     if model_type == "logistic":
@@ -405,8 +494,9 @@ def _fit_model(X: pd.DataFrame, y: pd.Series, model_type: str = "xgboost"):
 def _simulate_roi(probs: np.ndarray, outcomes: np.ndarray,
                   threshold: float = 0.05, avg_ml: float = -110) -> dict:
     """
-    Simulate flat-unit betting on games where edge ≥ threshold.
-    Assumes -110 avg moneyline (can be made dynamic).
+    Simulate flat-unit betting on games where edge ≥ threshold, on EITHER side.
+    `probs` are away-win probabilities; the home side is bet when (1-prob) clears
+    the threshold. Assumes -110 avg moneyline (can be made dynamic).
     """
     # Implied prob from -110
     implied = 110 / (110 + 100)  # 0.524
@@ -416,12 +506,21 @@ def _simulate_roi(probs: np.ndarray, outcomes: np.ndarray,
     profit = 0.0
 
     for prob, outcome in zip(probs, outcomes):
-        edge = prob - implied
-        if edge >= threshold:
+        away_edge = prob - implied
+        home_edge = (1.0 - prob) - implied
+        # At most one side can clear the threshold (away_edge + home_edge < 0).
+        if away_edge >= threshold:
             bets += 1
-            if outcome == 1:
+            if outcome == 1:          # away won
                 wins += 1
-                profit += 100 / 110  # win $100 on $110 bet → net +0.909u
+                profit += 100 / 110   # win $100 on $110 bet → net +0.909u
+            else:
+                profit -= 1.0
+        elif home_edge >= threshold:
+            bets += 1
+            if outcome == 0:          # home won
+                wins += 1
+                profit += 100 / 110
             else:
                 profit -= 1.0
 
@@ -535,6 +634,24 @@ def predict_game(model, game_features: dict, active_features: list = None) -> fl
     row["def_rank_diff"]         = home_def_rank - away_def_rank
     row["is_day_game"]           = int(game_features.get("is_day_game", False))
 
+    # ── Statcast (fall back to FIP / neutral if not provided) ──
+    def _v(key, fb):
+        v = game_features.get(key)
+        try:
+            if v is None or (isinstance(v, float) and np.isnan(v)):
+                return fb
+            return float(v)
+        except (TypeError, ValueError):
+            return fb
+    away_xera  = _v("away_xera", away_fip);  home_xera  = _v("home_xera", home_fip)
+    away_xwoba = _v("away_xwoba", 0.320);    home_xwoba = _v("home_xwoba", 0.320)
+    away_oaa   = _v("away_oaa", 0.0);        home_oaa   = _v("home_oaa", 0.0)
+    row["xera_diff"]      = away_xera - home_xera
+    row["away_xera_norm"] = (away_xera - LEAGUE_AVG_ERA) / 1.5
+    row["home_xera_norm"] = (home_xera - LEAGUE_AVG_ERA) / 1.5
+    row["xwoba_diff"]     = away_xwoba - home_xwoba
+    row["oaa_diff"]       = away_oaa - home_oaa
+
     X = pd.DataFrame([row])[active_features]
     prob = np.array(model.predict_proba(X))[0, 1]
     return float(prob)
@@ -544,9 +661,68 @@ def predict_game(model, game_features: dict, active_features: list = None) -> fl
 # MAIN -- run training
 # ---------------------------------------------
 
+# Minimum games required before training is meaningful. Below this we assume the
+# `games` table was never built (or got clobbered by the empty synced backup —
+# see RECOVERY_train_empty_db.md) rather than silently training on nothing.
+MIN_GAMES_TO_TRAIN = 200
+
+
+def preflight_db_check():
+    """Refuse to train on an empty/clobbered DB, with an actionable message.
+
+    The #1 recurring confusion: downloading odds/Savant files does NOT populate
+    the `games` table — only `mlb_data.py --build` does. This guard reports the
+    exact DB path being read and the row counts so it's obvious what's missing.
+    """
+    import sqlite3, sys
+    db = str(DB_PATH)
+    try:
+        con = sqlite3.connect(db, timeout=5)
+        def _count(t):
+            try:
+                return con.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0]
+            except Exception:
+                return None
+        games    = _count("games")
+        starters = _count("starters")
+        con.close()
+    except Exception as e:
+        games = starters = None
+        print(f"\n[PREFLIGHT] Could not open the training DB:\n  {db}\n  error: {e}")
+
+    if games is None or games < MIN_GAMES_TO_TRAIN:
+        bar = "!" * 68
+        print("\n" + bar)
+        print("  TRAINING ABORTED — the games table is empty (or nearly so).")
+        print(bar)
+        print(f"  DB being read : {db}")
+        print(f"  games rows    : {games if games is not None else 'table missing'}")
+        print(f"  starters rows : {starters if starters is not None else 'table missing'}")
+        print("")
+        print("  Downloading odds spreadsheets / Savant CSVs does NOT fill the")
+        print("  games table. Only the MLB Stats API build does. Run, in order:")
+        print("")
+        print('    python mlb_data.py --build --seasons 2018 2019 2020 2021 2022 2023 2024 2025 2026')
+        print('    python mlb_backfill.py --seasons 2018 2019 2020 2021 2022 2023 2024 2025 2026')
+        print('    python mlb_train.py')
+        print("")
+        print("  Then verify BEFORE retraining:")
+        print('    python -c "import sqlite3, mlb_data as m; print(sqlite3.connect(str(m.DB_PATH)).execute(\'select count(*) from games\').fetchone()[0])"')
+        print("")
+        print("  If games was > 0 before and is 0 now, the empty project copy")
+        print("  (data/mlb.db) likely overwrote your working DB — see")
+        print("  RECOVERY_train_empty_db.md. Build, verify > 0, then train in one sitting.")
+        print(bar + "\n")
+        sys.exit(1)
+
+    print(f"[PREFLIGHT] OK — {games} games, {starters} starters in\n  {DB_PATH}")
+
+
 if __name__ == "__main__":
     print("MLB Model Trainer v3")
     print("=" * 50)
+
+    preflight_db_check()
 
     df = load_dataset_from_db()
 
