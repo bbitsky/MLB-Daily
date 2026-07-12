@@ -42,6 +42,11 @@ from mlb_data import (
     ALL_STAR_BREAK_END,
 )
 from mlb_train import predict_game, load_model, LEAGUE_AVG_ERA
+try:
+    import mlb_edge as _EDGE
+except Exception as _e:
+    _EDGE = None
+    print(f'  [warn] mlb_edge unavailable ({_e}); using legacy conviction ladder')
 
 
 # -------------------------------------------------
@@ -139,8 +144,13 @@ def apply_rule_overlays(game: dict, base_away_prob: float) -> tuple:
 # CONVICTION + SIZING
 # -------------------------------------------------
 
-def get_conviction(edge: float) -> tuple:
-    """Return (conviction_label, units) based on model edge."""
+def get_conviction(edge: float, ml: int = None) -> tuple:
+    """Return (conviction_label, units). Week-1 recalibrated via mlb_edge:
+    favorites soft-capped/de-sized, dog-ladder top capped at 0.75u. Pass the
+    side's moneyline so the favorite penalty applies; legacy ladder is the
+    fallback if mlb_edge is unavailable."""
+    if _EDGE is not None and ml is not None:
+        return _EDGE.conviction(edge, ml)
     if edge >= 0.08:
         return "HIGH", 1.00
     if edge >= 0.06:
@@ -265,17 +275,23 @@ def print_picks_report(picks: list, today: str):
             prob  = g.get(f"{side}_prob", 0.5)
             impl  = g.get(f"{side}_implied", 0.5)
             edge  = g.get(f"{side}_edge", 0.0)
-            conv, units = get_conviction(edge)
-            sp    = g.get(f"{side}_starter", "TBD")
-            era   = g.get(f"{side}_era", LEAGUE_AVG_ERA)
-            fip   = g.get(f"{side}_fip", era)
-            xfip  = g.get(f"{side}_xfip", fip)
-            k9    = g.get(f"{side}_k9", 0.0)
-            whip  = g.get(f"{side}_whip", 1.30)
-            trend = g.get(f"{side}_trend", "stable")
+            conv, units = get_conviction(edge, ml)
+            sp    = g.get(f"{side}_starter") or "TBD"
+            # NOTE: .get(key, default) only applies the default when the key is
+            # ABSENT. Pitchers with no stats have the key present but set to None,
+            # which then crashes f-string ":.2f" formatting. Coalesce None here.
+            def _nz(key, default):
+                v = g.get(f"{side}_{key}")
+                return default if v is None else v
+            era   = _nz("era", LEAGUE_AVG_ERA)
+            fip   = _nz("fip", era)
+            xfip  = _nz("xfip", fip)
+            k9    = _nz("k9", 0.0)
+            whip  = _nz("whip", 1.30)
+            trend = _nz("trend", "stable")
             last5 = g.get(f"{side}_last5_era")
-            ops   = g.get(f"{side}_ops", 0.720)
-            wrc   = g.get(f"{side}_wrc_plus", 100)
+            ops   = _nz("ops", 0.720)
+            wrc   = _nz("wrc_plus", 100)
             starts_detail = g.get(f"{side}_starts_detail", [])
 
             trend_tag = ""
@@ -299,8 +315,10 @@ def print_picks_report(picks: list, today: str):
                 print(f"      Last-5 ERA: {last5:.2f}")
 
             # Offense line
-            opp_ops = g.get(f"{opp}_ops", 0.720)
-            opp_wrc = g.get(f"{opp}_wrc_plus", 100)
+            opp_ops = g.get(f"{opp}_ops")
+            opp_ops = 0.720 if opp_ops is None else opp_ops
+            opp_wrc = g.get(f"{opp}_wrc_plus")
+            opp_wrc = 100 if opp_wrc is None else opp_wrc
             print(f"      Offense: {team} OPS {ops:.3f} wRC+{wrc}  |  {g[f'{opp}_team']} OPS {opp_ops:.3f} wRC+{opp_wrc}")
 
             # Pick line
@@ -318,11 +336,11 @@ def print_picks_report(picks: list, today: str):
     for g in picks:
         for side in ("away", "home"):
             edge  = g.get(f"{side}_edge", 0.0)
-            conv, units = get_conviction(edge)
+            ml   = g.get(f"{side}_ml")
+            conv, units = get_conviction(edge, ml)
             if units > 0:
                 team = g[f"{side}_team"]
                 opp  = g["home_team"] if side == "away" else g["away_team"]
-                ml   = g.get(f"{side}_ml")
                 prob = g.get(f"{side}_prob", 0.5)
                 print(f"  {conv:10s}  {team} vs {opp}  {ml_str(ml)}  {prob:.1%}  {edge:+.1%}  [{units}u]")
     print()
@@ -367,6 +385,35 @@ def print_parlay_report(picks: list):
 
 def run_daily_picks(target_date: str = None):
     today = target_date or date.today().isoformat()
+
+    # ── FREEZE GATE ──────────────────────────────────────────────────────────
+    # Daily picks are locked at the initial run. If today is already frozen,
+    # reuse the snapshot and DO NOT pull live odds / recompute. This must run
+    # BEFORE any data pull so a re-run can never produce different picks.
+    # Override with --refresh to deliberately re-lock.
+    try:
+        import os as _os
+        import mlb_freeze
+        _base = _os.path.dirname(_os.path.abspath(__file__))
+        _refresh = "--refresh" in sys.argv
+        _frozen = None if _refresh else mlb_freeze.load_frozen(today, _base)
+        if _frozen:
+            print(f"\nMLB Model v3 -- {today}")
+            print(f"  [freeze] picks are LOCKED for {today} — reusing snapshot, "
+                  f"skipping live odds pull. (--refresh to re-lock)")
+            print_picks_report(_frozen, today)
+            print_parlay_report(_frozen)
+            try:
+                mlb_freeze  # summary from frozen picks
+                import mlb_summary
+                mlb_summary.write_daily_summary(
+                    _frozen, today, out_dir=_base,
+                    parlays=build_parlays(_frozen, min_leg_prob=0.57, max_legs=3, top_n=8))
+            except Exception:
+                pass
+            return _frozen
+    except Exception as _e:
+        print(f"  [freeze] gate skipped ({_e}); proceeding to generate.")
 
     print(f"\nMLB Model v3 -- {today}")
     print("Loading model...")
@@ -524,8 +571,9 @@ def run_daily_picks(target_date: str = None):
 
         away_implied = ml_to_prob(away_ml) if has_lines else 0.5
         home_implied = ml_to_prob(home_ml) if has_lines else 0.5
-        away_edge = (away_prob - away_implied) if has_lines else 0.0
-        home_edge = (home_prob - home_implied) if has_lines else 0.0
+        _pd = _EDGE.park_discount(pf) if _EDGE is not None else 1.0
+        away_edge = (away_prob - away_implied) * _pd if has_lines else 0.0
+        home_edge = (home_prob - home_implied) * _pd if has_lines else 0.0
 
         game_result = {
             "away_team":    away_team,
@@ -579,13 +627,41 @@ def run_daily_picks(target_date: str = None):
             "home_qs_rate": home_qs,
             "flags":        flags,
         }
+        # Guardrail (2026-07-12): void bets when the model probability implausibly
+        # contradicts the no-vig market (corrupted/inverted numberFire feed).
+        if _EDGE is not None and hasattr(_EDGE, "gate_game"):
+            _EDGE.gate_game(game_result)
         picks.append(game_result)
 
     # Sort by best edge across both sides
     picks.sort(key=lambda g: max(g.get("away_edge", 0), g.get("home_edge", 0)), reverse=True)
 
+    # Lock the day's picks at this initial run. A re-run reloads the snapshot
+    # instead of recomputing against live odds, so daily picks never change.
+    try:
+        import os as _os
+        import mlb_freeze
+        _base = _os.path.dirname(_os.path.abspath(__file__))
+        _refresh = "--refresh" in sys.argv
+        picks = mlb_freeze.load_or_freeze(picks, today, _base,
+                                          meta={"source": "mlb_daily"}, refresh=_refresh)
+    except Exception as _e:
+        print(f"  [freeze] skipped: {_e}")
+
     print_picks_report(picks, today)
     print_parlay_report(picks)
+
+    # Emit the operator's preferred why/why-not markdown summary (auto, every run).
+    try:
+        import os
+        import mlb_summary
+        parlays = build_parlays(picks, min_leg_prob=0.57, max_legs=3, top_n=8)
+        path = mlb_summary.write_daily_summary(
+            picks, today, out_dir=os.path.dirname(os.path.abspath(__file__)),
+            parlays=parlays)
+        print(f"\n  Why/why-not summary -> {os.path.basename(path)}")
+    except Exception as e:
+        print(f"\n  [summary] generation skipped: {e}")
 
     return picks
 

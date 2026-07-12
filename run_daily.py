@@ -76,7 +76,13 @@ def check_db_health(db_path):
     print("  [DB CHECK] data/mlb.db integrity ok.", file=sys.stderr)
 
 orig = P / "data" / "mlb.db"
-check_db_health(orig)
+# Health-check the DB ACTUALLY IN USE, not the synced project backup. mlb_data
+# relocates the live DB off the synced folder (LocalAppData on Windows); the
+# project data/mlb.db is only a backup and is frequently an empty/corrupt husk.
+# Checking it here used to sys.exit() and abort the whole daily run — including
+# dashboard regeneration — even when the live DB was perfectly healthy.
+live_db = Path(getattr(mdata, "DB_PATH", orig))
+check_db_health(live_db)
 if platform.system() == "Linux" and " " in str(orig) and orig.exists():
     tmp = Path(tempfile.mkdtemp(prefix="mlb_db_")) / "mlb.db"
     shutil.copy2(str(orig), str(tmp))
@@ -103,6 +109,18 @@ except Exception as _e:
 if not args.no_dashboard:
     today = date.today().isoformat(); pr2 = mres.get_pick_record(); rec = mdash.compute_model_record()
     bd2 = mres.get_bankroll_data()
+    # Load the LOCKED picks for the Picks tab — never recompute from live odds on
+    # a rebuild. Live/current odds are a separate read-only tab.
+    try:
+        import mlb_freeze
+        frozen_picks = mlb_freeze.load_frozen(today, str(P)) or []
+        if frozen_picks:
+            print(f"  [freeze] loaded {len(frozen_picks)} locked picks for {today}")
+        else:
+            print(f"  [freeze] no snapshot for {today} yet — run the morning build first.")
+    except Exception as _e:
+        frozen_picks = []
+        print(f"  [freeze] load skipped: {_e}")
     # Real betting/social intel (weather, line movement, book disagreement,
     # injuries). Degrades to None if the data sources are unavailable.
     bettor_news = social_intel = None
@@ -112,9 +130,16 @@ if not args.no_dashboard:
         print(f"  [intel] bettor={len(bettor_news or [])} social={len(social_intel or [])}")
     except Exception as _e:
         print(f"  [intel] skipped: {_e}")
-    html = mdash.generate_html(picks=[], record=rec, today=today, pick_record=pr2,
+    html = mdash.generate_html(picks=frozen_picks, record=rec, today=today, pick_record=pr2,
                                bankroll_data=bd2, bettor_news=bettor_news, social_intel=social_intel)
-    out = P / f"mlb_dashboard_{today}.html"; out.write_text(html, encoding="utf-8")
+    out = P / f"mlb_dashboard_{today}.html"
+    try:
+        import mlb_edge as _E
+        if hasattr(_E, "inject_health_banner"):
+            html = _E.inject_health_banner(html, frozen_picks)
+    except Exception:
+        pass
+    out.write_text(html, encoding="utf-8")
     print(f"\n[2] Dashboard -> {out.name} ({len(html):,} bytes)")
 
 pr = mres.get_pick_record(); t = pr["total"]; bank = 500 + t["pl"] * 50

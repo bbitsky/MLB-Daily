@@ -16,6 +16,13 @@ if platform.system() == "Linux" and " " in str(orig_db):
     print(f"  [DB] shadow -> {tmp_db}")
 
 import mlb_dashboard as dash
+try:
+    import mlb_edge as edge
+    _EDGE = edge
+except Exception as _e:
+    edge = None
+    _EDGE = None
+    print(f'  [warn] mlb_edge unavailable ({_e}); using legacy inline calibration')
 
 TODAY = "2026-07-01"
 
@@ -39,6 +46,9 @@ def conviction(edge, ml, opp_ml=None):
         opp_impl = abs(opp_ml) / (abs(opp_ml) + 100)
         if opp_impl > PROB_CAP:
             return "NO PLAY", 0.0
+    if edge is not None and _EDGE is not None:
+        return _EDGE.conviction(edge, ml)
+    # legacy fallback (only if mlb_edge failed to import)
     if edge >= 0.08: return "HIGH",     1.00
     if edge >= 0.06: return "MED-HIGH", 0.75
     if edge >= 0.05: return "MEDIUM",   0.50
@@ -51,18 +61,41 @@ def make_pick(away, home, away_ml, home_ml, ou,
               away_fip=None, home_fip=None,
               away_whip=1.30, home_whip=1.30,
               away_k9=8.5, home_k9=8.5,
+              away_last5_era=None, home_last5_era=None,
+              away_xera=None, home_xera=None,
               venue="", flags=None, hp_umpire=""):
     flags = flags or []
     away_fip = away_fip or away_era
     home_fip = home_fip or home_era
-    away_prob = formula_prob(away_era, home_era, away_wp, home_wp)
+    # Blend season ERA with recent form + FIP/xERA regression (mlb_edge) so the
+    # formula runs on realistic inputs, not raw season ERA.
+    _pf = dash.PARK_FACTORS.get(venue, 1.00)
+    if _EDGE is not None:
+        a_era_m = _EDGE.blended_era(away_era, away_last5_era, away_fip, away_xera)
+        h_era_m = _EDGE.blended_era(home_era, home_last5_era, home_fip, home_xera)
+    else:
+        a_era_m, h_era_m = away_era, home_era
+    away_prob = formula_prob(a_era_m, h_era_m, away_wp, home_wp)
     home_prob = 1.0 - away_prob
     away_impl = ml_to_prob(away_ml) if away_ml else 0.5
     home_impl = ml_to_prob(home_ml) if home_ml else 0.5
-    away_edge = away_prob - away_impl if away_ml else 0.0
-    home_edge = home_prob - home_impl if home_ml else 0.0
+    _pd = _EDGE.park_discount(_pf) if _EDGE is not None else 1.0
+    away_edge = (away_prob - away_impl) * _pd if away_ml else 0.0
+    home_edge = (home_prob - home_impl) * _pd if home_ml else 0.0
     away_conv, away_units = conviction(away_edge, away_ml, opp_ml=home_ml)
     home_conv, home_units = conviction(home_edge, home_ml, opp_ml=away_ml)
+    # Guardrail (2026-07-12): void bets when the model probability implausibly
+    # contradicts the no-vig market (corrupted/inverted numberFire feed). Works no
+    # matter how away_prob was set (ERA formula OR a numberFire override).
+    if _EDGE is not None and hasattr(_EDGE, "prob_is_sane"):
+        _ok, _gap = _EDGE.prob_is_sane(away_prob, away_ml, home_ml)
+        if not _ok:
+            away_edge = home_edge = 0.0
+            away_units = home_units = 0.0
+            away_conv = home_conv = "NO PLAY"
+            _mkt = _EDGE.market_novig_away(away_ml, home_ml)
+            flags = list(flags) + [f"nF-sanity: model {away_prob:.0%} vs market "
+                                   f"{_mkt:.0%} (gap {_gap:.0%}) — implausible, bet voided"]
     g = {
         "away_team": away, "home_team": home,
         "away_starter": away_sp, "home_starter": home_sp,
@@ -310,8 +343,51 @@ html = dash.generate_html(
     bettor_news=BETTOR_NEWS, social_intel=SOCIAL_INTEL, parlays=PARLAYS,
 )
 out  = P / f"mlb_dashboard_{TODAY}.html"
+# Slate-health banner: if the sanity gate voided any game (corrupt numberFire),
+# surface it prominently at the top of the dashboard.
+if _EDGE is not None and hasattr(_EDGE, "inject_health_banner"):
+    html = _EDGE.inject_health_banner(html, picks)
 out.write_text(html, encoding="utf-8")
 print(f"  Saved -> {out.name}  ({len(html):,} bytes)")
+
+# ── Dual-book logging: persist the FULL MODEL BOOK for grading ───────────
+# Every actionable side (units>0) is written with result=NULL so tomorrow's
+# auto_log_results grades it. This records the MODEL's record independent of
+# which picks were actually staked (bet=1 via sync_bets / the report). Compare
+# with mlb_results.get_pick_record(bets_only=True/False).
+_TEAM_FULL = {
+ "Diamondbacks":"Arizona Diamondbacks","Braves":"Atlanta Braves","Orioles":"Baltimore Orioles",
+ "Red Sox":"Boston Red Sox","Cubs":"Chicago Cubs","White Sox":"Chicago White Sox",
+ "Reds":"Cincinnati Reds","Guardians":"Cleveland Guardians","Rockies":"Colorado Rockies",
+ "Tigers":"Detroit Tigers","Astros":"Houston Astros","Royals":"Kansas City Royals",
+ "Angels":"Los Angeles Angels","Dodgers":"Los Angeles Dodgers","Marlins":"Miami Marlins",
+ "Brewers":"Milwaukee Brewers","Twins":"Minnesota Twins","Mets":"New York Mets",
+ "Yankees":"New York Yankees","Athletics":"Athletics","Phillies":"Philadelphia Phillies",
+ "Pirates":"Pittsburgh Pirates","Padres":"San Diego Padres","Giants":"San Francisco Giants",
+ "Mariners":"Seattle Mariners","Cardinals":"St. Louis Cardinals","Rays":"Tampa Bay Rays",
+ "Rangers":"Texas Rangers","Blue Jays":"Toronto Blue Jays","Nationals":"Washington Nationals"}
+if _EDGE is not None:
+    _cands = []
+    for g in picks:
+        for side in ("away","home"):
+            if g.get(f"{side}_units",0) > 0:
+                _cands.append({
+                    "pick_team": _TEAM_FULL.get(g[f"{side}_team"], g[f"{side}_team"]),
+                    "ml":        g[f"{side}_ml"],
+                    "my_prob":   round(g[f"{side}_prob"],4),
+                    "implied_prob": round(g[f"{side}_implied"],4),
+                    "edge":      round(g[f"{side}_edge"],4),
+                    "conviction": g[f"{side}_conv"],
+                    "units":     g[f"{side}_units"],
+                    "bet":       0,   # set to 1 later via sync_bets / report for staked picks
+                })
+    try:
+        import mlb_data as _md2
+        _dbp = getattr(_md2, "DB_PATH", str(P / "data" / "mlb.db"))
+    except Exception:
+        _dbp = str(P / "data" / "mlb.db")
+    _n = _EDGE.log_picks(_dbp, TODAY, _cands)
+    print(f"  [dual-book] logged {_n} model pick(s) to {_dbp} (bet=0; flag staked picks via sync_bets)")
 
 print(f"\n{'='*65}")
 print(f"  MLB MODEL PICKS -- {TODAY}  (manual research mode)")
