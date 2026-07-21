@@ -993,7 +993,7 @@ tr:hover td{background:var(--sur2);}
   <div class="sec-title">My Bets — the games you check</div>
   <p style="font-size:12px;color:var(--mut);margin-bottom:12px">Tick &quot;bet&quot; on any game in the Full Slate (or a parlay) and type your stake in $. Everything saves in your browser instantly and totals live below. Use Save to write to the database via sync_bets.py.</p>
   <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
-    <label style="font-size:12px;color:var(--mut)">Daily starting balance $<input id="startbal-input" type="number" step="1" oninput="setStartBal(this)" placeholder="475.0" style="width:100px;margin-left:6px;background:var(--bg);border:1px solid var(--bdr);color:var(--txt);border-radius:6px;padding:5px 8px;font-size:13px"></label>
+    <label style="font-size:12px;color:var(--mut)">Daily starting balance $<input id="startbal-input" type="number" step="0.01" oninput="setStartBal(this)" placeholder="475.0" style="width:100px;margin-left:6px;background:var(--bg);border:1px solid var(--bdr);color:var(--txt);border-radius:6px;padding:5px 8px;font-size:13px"></label>
     <button onclick="resetStartBal()" style="background:none;color:var(--mut);border:1px solid var(--mut);border-radius:6px;padding:5px 10px;font-size:11px;cursor:pointer">Reset to carryover</button>
   </div>
   <div style="display:flex;gap:10px;margin-bottom:16px">
@@ -1152,20 +1152,23 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
   window.renderMyBets=function(){
     var el=document.getElementById('mybets-body'); if(!el) return;
     if(selected.size===0){ el.innerHTML='<p style="color:var(--mut);padding:8px 4px">No bets yet. Tick \"bet\" on any game in the Full Slate (Today\'s Picks tab) or a parlay, and enter your stake.</p>'; return; }
-    var graded=[], pending=[], w=0,l=0,pl=0,staked=0,pendStake=0,pendReturn=0;
+    var graded=[], pending=[], w=0,l=0,pl=0,staked=0,pendStake=0,pendReturn=0,todayPL=0;
+    var today=''; for(var _k in PICK_META){ var _d=PICK_META[_k].date; if(_d>today) today=_d; }
     selected.forEach(function(pid){ var m=meta(pid); if(!m) return; var r=resultOf(pid), sk=stake(pid);
       var row={pid:pid,m:m,s:sk,r:r,pl:plOf(pid)};
-      if(r==='W'||r==='L'){ graded.push(row); if(r==='W')w++; else l++; pl+=row.pl; staked+=sk; }
+      if(r==='W'||r==='L'){ graded.push(row); if(r==='W')w++; else l++; pl+=row.pl; staked+=sk; if(m.date===today) todayPL+=row.pl; }
       else { pending.push(row); pendStake+=sk; pendReturn+=sk*payoutOf(pid); }
     });
-    var bank=startBalance()+pl, n=w+l, wr=n?100*w/n:0, roi=staked?100*pl/staked:0, cls=pl>=0?'pos':'neg';
+    var bank=startBalance()+todayPL-pendStake, n=w+l, wr=n?100*w/n:0, roi=staked?100*pl/staked:0, cls=pl>=0?'pos':'neg', bcls=todayPL>=0?'pos':'neg';
     var html='<div class="stats-bar" style="border-radius:8px;margin-bottom:14px">'
       + statc('Record', w+'W-'+l+'L', cls)+'<div class="sdiv"></div>'
       + statc('Win Rate', wr.toFixed(1)+'%', cls)+'<div class="sdiv"></div>'
       + statc('Staked', '$'+staked.toFixed(0), '')+'<div class="sdiv"></div>'
       + statc('P/L', (pl>=0?'+':'')+'$'+pl.toFixed(2), cls)+'<div class="sdiv"></div>'
       + statc('ROI', (roi>=0?'+':'')+roi.toFixed(1)+'%', cls)+'<div class="sdiv"></div>'
-      + statc('Balance', '$'+bank.toFixed(2), cls)+'</div>';
+      + statc('Start', '$'+startBalance().toFixed(2), '')+'<div class="sdiv"></div>'
+      + statc('Balance', '$'+bank.toFixed(2), bcls)+'</div>';
+    html+='<p style="font-size:11px;color:var(--mut);margin:-4px 2px 12px">Start = today\u2019s entered balance. Balance = Start minus stakes on still-pending bets, plus any of today\u2019s settled results.</p>';
     html+='<p style="font-size:11px;color:var(--mut);margin:0 2px 10px">Odds boxes are editable \u2014 type your sportsbook line (American, e.g. -110) to recompute P/L. Blank uses model odds.</p>';
     function nm(m){ return m.type==='parlay' ? esc(m.title) : (esc(m.team)+' '+mlStr(m.ml)); }
     if(pending.length){
