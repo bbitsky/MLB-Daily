@@ -1090,12 +1090,13 @@ var PARLAY_META = {"parlay|2026-07-21|0": {"title": "Top 2-Team Parlay — Miami
 var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
 
 (function(){
-  var LS_SEL='mlbMyBets_v2', LS_AMT='mlbMyAmts_v2', LS_BAL='mlbStartBal_v1', LS_SEEN='mlbSeenPicks_v1';
+  var LS_SEL='mlbMyBets_v2', LS_AMT='mlbMyAmts_v2', LS_BAL='mlbStartBal_v1', LS_SEEN='mlbSeenPicks_v1', LS_ODDS='mlbMyOdds_v1';
   function loadSel(){ try{var v=localStorage.getItem(LS_SEL); if(v) return new Set(JSON.parse(v));}catch(e){}
     var seed=[]; for(var pid in PICK_META){ if(PICK_META[pid].bet) seed.push(pid);} return new Set(seed); }
   function loadAmts(){ try{var v=localStorage.getItem(LS_AMT); if(v) return JSON.parse(v)||{};}catch(e){} return {}; }
   function loadBal(){ try{var v=localStorage.getItem(LS_BAL); if(v!==null&&v!=='') return parseFloat(v);}catch(e){} return null; }
-  var selected=loadSel(), amounts=loadAmts(), startOv=loadBal();
+  function loadOdds(){ try{var v=localStorage.getItem(LS_ODDS); if(v) return JSON.parse(v)||{};}catch(e){} return {}; }
+  var selected=loadSel(), amounts=loadAmts(), startOv=loadBal(), myOdds=loadOdds();
   // Auto-merge newly-added model picks (bet=1) into the saved selection so each new day's picks
   // appear without wiping manual edits. Each pick is added at most once (tracked in LS_SEEN);
   // once a pick has been seen, a later manual untick is respected permanently.
@@ -1116,6 +1117,7 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
   function saveSel(){ try{localStorage.setItem(LS_SEL, JSON.stringify(Array.from(selected)));}catch(e){} }
   function saveAmts(){ try{localStorage.setItem(LS_AMT, JSON.stringify(amounts));}catch(e){} }
   function saveBal(){ try{ if(startOv===null) localStorage.removeItem(LS_BAL); else localStorage.setItem(LS_BAL, String(startOv)); }catch(e){} }
+  function saveOdds(){ try{localStorage.setItem(LS_ODDS, JSON.stringify(myOdds));}catch(e){} }
   function meta(pid){ return PICK_META[pid] || (typeof PARLAY_META!=='undefined' && PARLAY_META[pid]) || null; }
   function esc(x){ return (''+x).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
   function mlStr(ml){ ml=parseInt(ml,10); return ml>0?('+'+ml):(''+ml); }
@@ -1125,13 +1127,20 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
   function startBalance(){ return (startOv!==null)?startOv:START_BANKROLL; }
   function gradeParlay(m){ var pend=false; for(var i=0;i<m.legs.length;i++){ var lm=PICK_META[m.legs[i]]; if(!lm||!lm.result){pend=true;continue;} if(lm.result==='L') return 'L'; } return pend?null:'W'; }
   function resultOf(pid){ var m=meta(pid); if(!m) return null; if(m.type==='parlay') return gradeParlay(m); return m.result||null; }
-  function plOf(pid){ var r=resultOf(pid), sk=stake(pid), m=meta(pid); if(!m||!sk) return 0; if(r==='W') return sk*(m.payout||0); if(r==='L') return -sk; return 0; }
+  function amToPayout(ml){ ml=parseInt(ml,10); if(isNaN(ml)||ml===0) return 0; return ml>0? ml/100 : 100/Math.abs(ml); }
+  function oddsOf(pid){ var o=myOdds[pid]; if(typeof o==='number') return o; var m=meta(pid); if(!m) return null; if(m.type==='parlay'){ var n=parseInt(m.odds,10); return isNaN(n)?null:n; } return m.ml; }
+  function payoutOf(pid){ var o=myOdds[pid]; if(typeof o==='number') return amToPayout(o); var m=meta(pid); return m?(m.payout||0):0; }
+  function oddsInput(pid){ var eff=oddsOf(pid), cust=(typeof myOdds[pid]==='number'); var bd=cust?'var(--blu)':'var(--bdr)'; return '<input type="text" inputmode="numeric" class="oddsin" data-pid="'+esc(pid)+'" value="'+(eff!=null?mlStr(eff):'')+'" onchange="setOdds(this)" title="Your sportsbook odds (American, e.g. -110). Blank uses model odds." style="width:58px;text-align:center;background:var(--bg);border:1px solid '+bd+';color:var(--txt);border-radius:4px;padding:2px 5px;font-size:11px">'; }
+  function plOf(pid){ var r=resultOf(pid), sk=stake(pid), m=meta(pid); if(!m||!sk) return 0; if(r==='W') return sk*payoutOf(pid); if(r==='L') return -sk; return 0; }
   window.toggleBet=function(cb){ var pid=cb.getAttribute('data-pid');
     if(cb.checked){ selected.add(pid); if(!(pid in amounts)) amounts[pid]=defStake(pid); } else selected.delete(pid);
     saveSel(); saveAmts(); syncBoxes(); if(window.renderMyBets) window.renderMyBets(); };
   window.setAmt=function(inp){ var pid=inp.getAttribute('data-pid'), v=parseFloat(inp.value);
     if(isNaN(v)||v<=0){ delete amounts[pid]; } else { amounts[pid]=v; selected.add(pid); }
     saveSel(); saveAmts(); syncBoxes(); if(window.renderMyBets) window.renderMyBets(); };
+  window.setOdds=function(inp){ var pid=inp.getAttribute('data-pid'); var raw=(''+inp.value).replace(/[^0-9+-]/g,''); var v=parseInt(raw,10);
+    if(isNaN(v)||Math.abs(v)<100){ delete myOdds[pid]; } else { myOdds[pid]=v; }
+    saveOdds(); if(window.renderMyBets) window.renderMyBets(); };
   window.setStartBal=function(inp){ var v=parseFloat(inp.value); startOv=isNaN(v)?null:v; saveBal(); if(window.renderMyBets) window.renderMyBets(); };
   window.resetStartBal=function(){ startOv=null; saveBal(); var el=document.getElementById('startbal-input'); if(el) el.value=''; if(window.renderMyBets) window.renderMyBets(); };
   function syncBoxes(){
@@ -1145,9 +1154,9 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
     if(selected.size===0){ el.innerHTML='<p style="color:var(--mut);padding:8px 4px">No bets yet. Tick \"bet\" on any game in the Full Slate (Today\'s Picks tab) or a parlay, and enter your stake.</p>'; return; }
     var graded=[], pending=[], w=0,l=0,pl=0,staked=0,pendStake=0,pendReturn=0;
     selected.forEach(function(pid){ var m=meta(pid); if(!m) return; var r=resultOf(pid), sk=stake(pid);
-      var row={m:m,s:sk,r:r,pl:plOf(pid)};
+      var row={pid:pid,m:m,s:sk,r:r,pl:plOf(pid)};
       if(r==='W'||r==='L'){ graded.push(row); if(r==='W')w++; else l++; pl+=row.pl; staked+=sk; }
-      else { pending.push(row); pendStake+=sk; pendReturn+=sk*(m.payout||0); }
+      else { pending.push(row); pendStake+=sk; pendReturn+=sk*payoutOf(pid); }
     });
     var bank=startBalance()+pl, n=w+l, wr=n?100*w/n:0, roi=staked?100*pl/staked:0, cls=pl>=0?'pos':'neg';
     var html='<div class="stats-bar" style="border-radius:8px;margin-bottom:14px">'
@@ -1157,27 +1166,28 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
       + statc('P/L', (pl>=0?'+':'')+'$'+pl.toFixed(2), cls)+'<div class="sdiv"></div>'
       + statc('ROI', (roi>=0?'+':'')+roi.toFixed(1)+'%', cls)+'<div class="sdiv"></div>'
       + statc('Balance', '$'+bank.toFixed(2), cls)+'</div>';
+    html+='<p style="font-size:11px;color:var(--mut);margin:0 2px 10px">Odds boxes are editable \u2014 type your sportsbook line (American, e.g. -110) to recompute P/L. Blank uses model odds.</p>';
     function nm(m){ return m.type==='parlay' ? esc(m.title) : (esc(m.team)+' '+mlStr(m.ml)); }
     if(pending.length){
       html+='<div class="sec-title" style="font-size:13px">Pending ('+pending.length+') — $'+pendStake.toFixed(0)+' staked, $'+pendReturn.toFixed(0)+' to return</div>'
         +'<table><thead><tr><th>Date</th><th>Bet</th><th>Odds</th><th>Stake</th><th>To win</th></tr></thead><tbody>';
-      pending.forEach(function(row){ var m=row.m, od=(m.type==='parlay')?m.odds:mlStr(m.ml), tw=row.s*(m.payout||0);
-        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+esc(od)+'</td><td>$'+row.s.toFixed(0)+'</td><td>$'+tw.toFixed(2)+'</td></tr>'; });
+      pending.forEach(function(row){ var m=row.m, tw=row.s*payoutOf(row.pid);
+        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+oddsInput(row.pid)+'</td><td>$'+row.s.toFixed(0)+'</td><td>$'+tw.toFixed(2)+'</td></tr>'; });
       html+='</tbody></table>';
     }
     if(graded.length){
       graded.sort(function(a,b){ return a.m.date<b.m.date?1:-1; });
       html+='<div class="sec-title" style="font-size:13px;margin-top:16px">Settled ('+graded.length+')</div>'
         +'<table><thead><tr><th>Date</th><th>Bet</th><th>Odds</th><th>Stake</th><th>Result</th><th>P/L $</th></tr></thead><tbody>';
-      graded.forEach(function(row){ var m=row.m, rc=row.r==='W'?'pos':'neg', od=(m.type==='parlay')?m.odds:mlStr(m.ml);
-        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+esc(od)+'</td><td>$'+row.s.toFixed(0)+'</td><td class="'+rc+'">'+row.r+'</td><td class="'+rc+'">'+(row.pl>=0?'+':'')+'$'+row.pl.toFixed(2)+'</td></tr>'; });
+      graded.forEach(function(row){ var m=row.m, rc=row.r==='W'?'pos':'neg';
+        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+oddsInput(row.pid)+'</td><td>$'+row.s.toFixed(0)+'</td><td class="'+rc+'">'+row.r+'</td><td class="'+rc+'">'+(row.pl>=0?'+':'')+'$'+row.pl.toFixed(2)+'</td></tr>'; });
       html+='</tbody></table>';
     }
     el.innerHTML=html;
   };
   window.saveMyBets=function(){
     var data={ version:2, generated:new Date().toISOString(), startBalance:startBalance(),
-      picks:Array.from(selected).map(function(pid){ var m=meta(pid)||{}; return {pid:pid, type:m.type||'single', date:m.date, team:m.team, ml:m.ml, title:m.title, amount:stake(pid)}; }) };
+      picks:Array.from(selected).map(function(pid){ var m=meta(pid)||{}; return {pid:pid, type:m.type||'single', date:m.date, team:m.team, ml:m.ml, odds:oddsOf(pid), title:m.title, amount:stake(pid)}; }) };
     var blob=new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
     var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='my_bets.json'; document.body.appendChild(a); a.click(); a.remove();
   };
