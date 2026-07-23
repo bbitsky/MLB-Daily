@@ -545,6 +545,12 @@ tr:hover td{background:var(--sur2);}
     <button onclick="saveMyBets()" style="background:var(--blu);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer">Save my bets to file</button>
     <button onclick="clearMyBets()" style="background:none;color:var(--mut);border:1px solid var(--mut);border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer">Clear all</button>
   </div>
+  <div style="display:flex;gap:10px;margin-bottom:6px;flex-wrap:wrap;align-items:center">
+    <button onclick="syncExport(this)" style="background:none;color:var(--blu);border:1px solid var(--blu);border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer;white-space:nowrap">Copy sync code</button>
+    <input id="sync-code" type="text" placeholder="Paste sync code from your other device" style="flex:1;min-width:180px;background:var(--bg);border:1px solid var(--bdr);color:var(--txt);border-radius:6px;padding:8px 10px;font-size:12px">
+    <button onclick="syncImport()" style="background:var(--blu);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:12px;cursor:pointer">Import</button>
+  </div>
+  <p id="sync-status" style="font-size:11px;color:var(--mut);margin:0 2px 14px">Phone &harr; laptop: bets and custom odds save per-device. Tap &quot;Copy sync code&quot; on the device where you entered them, then paste the code here on the other device and hit Import.</p>
   <div id="mybets-body"></div>
 </div>
 </div>
@@ -734,6 +740,40 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
       picks:Array.from(selected).map(function(pid){ var m=meta(pid)||{}; return {pid:pid, type:m.type||'single', date:m.date, team:m.team, ml:m.ml, odds:oddsOf(pid), title:m.title, amount:stake(pid)}; }) };
     var blob=new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
     var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='my_bets.json'; document.body.appendChild(a); a.click(); a.remove();
+  };
+  function b64enc(s){ return btoa(unescape(encodeURIComponent(s))); }
+  function b64dec(s){ return decodeURIComponent(escape(atob(s))); }
+  window.syncExport=function(btn){
+    var seen=[]; try{var sv=localStorage.getItem(LS_SEEN); if(sv) seen=JSON.parse(sv)||[];}catch(e){}
+    var payload={v:1, sel:Array.from(selected), amts:amounts, odds:myOdds, bal:startOv, seen:seen};
+    var code='MLBSYNC1.'+b64enc(JSON.stringify(payload));
+    var box=document.getElementById('sync-code'); if(box) box.value=code;
+    function done(ok){ var st=document.getElementById('sync-status');
+      if(st) st.textContent= ok?'Copied! Paste it into this box on your other device and hit Import.':'Could not auto-copy - the code is in the box; copy it manually.';
+      if(btn){ var t=btn.textContent; btn.textContent= ok?'Copied!':'See box'; setTimeout(function(){btn.textContent=t;},2500); } }
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(code).then(function(){done(true);},function(){ if(box){box.focus();box.select();} done(false); }); }
+    else { if(box){box.focus();box.select();} done(false); }
+  };
+  window.syncImport=function(){
+    var box=document.getElementById('sync-code'), st=document.getElementById('sync-status');
+    var raw=box?(''+box.value).trim():'';
+    function fail(msg){ if(st) st.textContent=msg; }
+    if(!raw) return fail('Paste a sync code first (tap Copy sync code on your other device).');
+    var m=raw.match(/MLBSYNC1\.([A-Za-z0-9+\/=]+)/); if(!m) return fail('That does not look like a sync code - copy the whole thing.');
+    var p; try{ p=JSON.parse(b64dec(m[1])); }catch(e){ p=null; }
+    if(!p||!p.sel||typeof p.sel.length!=='number') return fail('Could not read that code - copy it again in full.');
+    var added=0, odds=0, k, i;
+    for(i=0;i<p.sel.length;i++){ if(!selected.has(p.sel[i])){ selected.add(p.sel[i]); added++; } }
+    if(p.amts) for(k in p.amts){ amounts[k]=p.amts[k]; }
+    if(p.odds) for(k in p.odds){ myOdds[k]=p.odds[k]; odds++; }
+    if(typeof p.bal==='number') startOv=p.bal;
+    try{ var seen=new Set(); var sv=localStorage.getItem(LS_SEEN); if(sv) JSON.parse(sv).forEach(function(x){seen.add(x);});
+      (p.seen||[]).forEach(function(x){seen.add(x);}); localStorage.setItem(LS_SEEN, JSON.stringify(Array.from(seen))); }catch(e){}
+    saveSel(); saveAmts(); saveOdds(); saveBal();
+    var el=document.getElementById('startbal-input'); if(el&&startOv!==null) el.value=startOv;
+    if(box) box.value='';
+    syncBoxes(); window.renderMyBets();
+    if(st) st.textContent='Imported: '+added+' new bet(s), '+odds+' custom odds. Existing bets on this device were kept.';
   };
   window.clearMyBets=function(){ selected=new Set(); amounts={}; saveSel(); saveAmts(); syncBoxes(); window.renderMyBets(); };
   function init(){ var el=document.getElementById('startbal-input'); if(el&&startOv!==null) el.value=startOv; syncBoxes(); window.renderMyBets(); }
