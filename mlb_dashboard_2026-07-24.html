@@ -1204,6 +1204,7 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 15, DEFAULT_STAKE = 15;  /* rebased 2
   function mlStr(ml){ ml=parseInt(ml,10); return ml>0?('+'+ml):(''+ml); }
   function statc(l,v,c){ return '<div class="sc"><span class="sl">'+l+'</span><span class="sv '+c+'">'+v+'</span></div>'; }
   function stake(pid){ var a=amounts[pid]; if(typeof a==='number'&&a>0) return a; return selected.has(pid)?defStake(pid):0; }
+  function money(v){ v=Math.round(v*100)/100; return '$'+(v===Math.round(v)?v.toFixed(0):v.toFixed(2)); }
   function defStake(pid){ var m=meta(pid); if(m&&m.units) return Math.round(m.units*UNIT_DOLLARS*100)/100; return DEFAULT_STAKE; }
   function startBalance(){ return (startOv!==null)?startOv:START_BANKROLL; }
   function gradeParlay(m){ var pend=false; for(var i=0;i<m.legs.length;i++){ var lm=PICK_META[m.legs[i]]; if(!lm||!lm.result){pend=true;continue;} if(lm.result==='L') return 'L'; } return pend?null:'W'; }
@@ -1244,7 +1245,7 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 15, DEFAULT_STAKE = 15;  /* rebased 2
     var html='<div class="stats-bar" style="border-radius:8px;margin-bottom:14px">'
       + statc('Record', w+'W-'+l+'L', cls)+'<div class="sdiv"></div>'
       + statc('Win Rate', wr.toFixed(1)+'%', cls)+'<div class="sdiv"></div>'
-      + statc('Staked', '$'+staked.toFixed(0), '')+'<div class="sdiv"></div>'
+      + statc('Staked', money(staked), '')+'<div class="sdiv"></div>'
       + statc('P/L', (pl>=0?'+':'')+'$'+pl.toFixed(2), cls)+'<div class="sdiv"></div>'
       + statc('ROI', (roi>=0?'+':'')+roi.toFixed(1)+'%', cls)+'<div class="sdiv"></div>'
       + statc('Start', '$'+startBalance().toFixed(2), '')+'<div class="sdiv"></div>'
@@ -1253,10 +1254,10 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 15, DEFAULT_STAKE = 15;  /* rebased 2
     html+='<p style="font-size:11px;color:var(--mut);margin:0 2px 10px">Odds boxes are editable \u2014 type your sportsbook line (American, e.g. -110) to recompute P/L. Blank uses model odds.</p>';
     function nm(m){ return m.type==='parlay' ? esc(m.title) : (esc(m.team)+' '+mlStr(m.ml)); }
     if(pending.length){
-      html+='<div class="sec-title" style="font-size:13px">Pending ('+pending.length+') — $'+pendStake.toFixed(0)+' staked, $'+pendReturn.toFixed(0)+' to return</div>'
+      html+='<div class="sec-title" style="font-size:13px">Pending ('+pending.length+') — '+money(pendStake)+' staked, '+money(pendReturn)+' to return</div>'
         +'<table><thead><tr><th>Date</th><th>Bet</th><th>Odds</th><th>Stake</th><th>To win</th></tr></thead><tbody>';
       pending.forEach(function(row){ var m=row.m, tw=row.s*payoutOf(row.pid);
-        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+oddsInput(row.pid)+'</td><td>$'+row.s.toFixed(0)+'</td><td>$'+tw.toFixed(2)+'</td></tr>'; });
+        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+oddsInput(row.pid)+'</td><td>'+money(row.s)+'</td><td>$'+tw.toFixed(2)+'</td></tr>'; });
       html+='</tbody></table>';
     }
     if(graded.length){
@@ -1264,7 +1265,7 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 15, DEFAULT_STAKE = 15;  /* rebased 2
       html+='<div class="sec-title" style="font-size:13px;margin-top:16px">Settled ('+graded.length+')</div>'
         +'<table><thead><tr><th>Date</th><th>Bet</th><th>Odds</th><th>Stake</th><th>Result</th><th>P/L $</th></tr></thead><tbody>';
       graded.forEach(function(row){ var m=row.m, rc=row.r==='W'?'pos':'neg';
-        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+oddsInput(row.pid)+'</td><td>$'+row.s.toFixed(0)+'</td><td class="'+rc+'">'+row.r+'</td><td class="'+rc+'">'+(row.pl>=0?'+':'')+'$'+row.pl.toFixed(2)+'</td></tr>'; });
+        html+='<tr><td>'+esc(m.date)+'</td><td>'+nm(m)+'</td><td>'+oddsInput(row.pid)+'</td><td>'+money(row.s)+'</td><td class="'+rc+'">'+row.r+'</td><td class="'+rc+'">'+(row.pl>=0?'+':'')+'$'+row.pl.toFixed(2)+'</td></tr>'; });
       html+='</tbody></table>';
     }
     el.innerHTML=html;
