@@ -237,7 +237,7 @@ tr:hover td{background:var(--sur2);}
 <div class="hdr">
   <div>
     <div class="hdr-title">MLB Betting Model <span>v3</span></div>
-    <div class="hdr-date">Generated July 24, 2026  8:17 AM</div>
+    <div class="hdr-date">Generated July 24, 2026  8:20 AM</div>
   </div>
   <div style="text-align:right">
     <div style="font-size:13px;color:#94a3b8">4 plays &nbsp;|&nbsp; 1.85u in action</div>
@@ -1228,7 +1228,7 @@ var START_BANKROLL = 475.0, UNIT_DOLLARS = 24, DEFAULT_STAKE = 24;
     var bs=document.querySelectorAll('.betbox');
     for(var i=0;i<bs.length;i++){ bs[i].checked=selected.has(bs[i].getAttribute('data-pid')); }
     var as=document.querySelectorAll('.betamt');
-    for(var j=0;j<as.length;j++){ var p=as[j].getAttribute('data-pid'); as[j].value=(p in amounts)?amounts[p]:''; }
+    for(var j=0;j<as.length;j++){ if(as[j]===document.activeElement) continue; /* don't clobber the box being typed in (kills decimals + caret) */ var p=as[j].getAttribute('data-pid'); as[j].value=(p in amounts)?amounts[p]:''; }
   }
   window.renderMyBets=function(){
     var el=document.getElementById('mybets-body'); if(!el) return;
